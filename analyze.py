@@ -68,7 +68,7 @@ def setup(args):
     # input filepaths
     rmsk_in = "%s/data/rmsk.txt.gz" % path
     chip_in = ("/home/mcb/blanchem/wgEncodeRegTfbsClustered/%s_%s.bed" %
-              (tf1_code, tf1_name))
+              (tf1_code[0:6], tf1_name))
     tf1_in  = "/scratch/blanchem/%s/sites/sites.%s.gz" % (chromosome, tf1_code)
     tf2_in  = "/scratch/blanchem/%s/sites/sites.%s.gz" % (chromosome, tf2_code)
     
