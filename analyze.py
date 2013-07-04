@@ -42,13 +42,13 @@ def run(argv):
         
         # create objects
         rmsk = RMSK(args.chr)
-        chipseq = ChipSeq(args.chr, args.tf1_code)
-        tf1 = TFBS(args.chr, args.tf1_code, 1)
-        tf2 = TFBS(args.chr, args.tf2_code, 2)
+        chip = ChipSeq(args.chr, args.tf1_code)
+        tf1  = TFBS(args.chr, args.tf1_code, 1)
+        tf2  = TFBS(args.chr, args.tf2_code, 2)
         
         # fill data array
         rmsk.fill(data)    # RepeatMasker + 10
-        chipseq.fill(data) # ChIP-Seq     +  1
+        chip.fill(data) # ChIP-Seq     +  1
         
         # fill TFBS lists
         tf1.fill()
@@ -59,7 +59,25 @@ def run(argv):
         print "Completed: %s" % args
 
 def setup(args):
-    pass
+    chromosome = args.chr
+    tf1_name   = args.tf1_name
+    tf1_code   = args.tf1_code
+    tf2_code   = args.tf2_code
+    
+    # input filepaths
+    rmsk_in = "%s/data/rmsk.txt.gz" % path
+    chip_in = ("/home/mcb/blanchem/wgEncodeRegTfbsClustered/%s_%s.bed" %
+              (tf1_code, tf1_name))
+    tf1_in  = "/scratch/blanchem/%s/sites/sites.%s.gz" % (chromosome, tf1_code)
+    tf2_in  = "/scratch/blanchem/%s/sites/sites.%s.gz" % (chromosome, tf2_code)
+    
+    # output filepaths
+    rmsk_out = "%s/data/%s/rmsk.txt" % (path, chromosome)
+    chip_out = "%s/data/%s/chip_seq_%s.txt" % (path, chromosome, tf1_code[0:6])
+    tf1_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf1_code)
+    tf2_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf2_code)
+    
+    # prepare textfiles
 
 def generate_data(args, chromosome, tf1, tf2):
     pass
