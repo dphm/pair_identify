@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
 import sys
+from rmsk import RMSK
+from chipseq import ChipSeq
+from tfbs import TFBS
 
 path = "/scratch/dpham4"
 
