@@ -1,3 +1,5 @@
+from subprocess import call
+
 class TFBS(object):
     def __init__(self, chromosome, code, kind):
         self.code = code
