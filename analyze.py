@@ -27,7 +27,12 @@ def run(argv):
         print "Processing: %s" % args
         
         # file preparation
-        setup(args)
+        status = setup(args)
+        
+        if status == 1:
+            print "Error: failed to prepare input files."
+            print "Failed: %s" % args
+            return
         
         # create data array
         data = [0] * MAX_ARRAY_SIZE
