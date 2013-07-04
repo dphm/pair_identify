@@ -27,6 +27,7 @@ def run(argv):
         print "Processing: %s" % args
         
         # file preparation
+        setup(args)
         
         # create data array
         data = [0] * MAX_ARRAY_SIZE
@@ -48,6 +49,9 @@ def run(argv):
         generate_data(args, chromosome, tf1, tf2)
         
         print "Completed: %s" % args
+
+def setup(args):
+    pass
 
 def generate_data(args, chromosome, tf1, tf2):
     pass
