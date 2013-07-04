@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 from rmsk import RMSK
 from chipseq import ChipSeq
@@ -78,6 +79,14 @@ def setup(args):
     tf2_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf2_code)
     
     # prepare textfiles
+    if not os.path.exists(rmsk_out):
+        pass
+    if not os.path.exists(chip_out):
+        pass
+    if not os.path.exists(tf1_out):
+        pass
+    if not os.path.exists(tf2_out):
+        pass
 
 def generate_data(args, chromosome, tf1, tf2):
     pass
