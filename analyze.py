@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import os
 import sys
 from rmsk import RMSK
 from chipseq import ChipSeq
 from tfbs import TFBS
+from os import mkdir, path.exists
 
 path = "/scratch/dpham4"
 
