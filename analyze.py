@@ -2,6 +2,8 @@
 
 import sys
 
+path = "/scratch/dpham4"
+
 MAX_ARRAY_SIZE = 250000000
 
 class ARGS(object):
