@@ -5,15 +5,15 @@ import sys
 MAX_ARRAY_SIZE = 250000000
 
 class ARGS(object):
-    def __init__(self, chromosome, TF1_name, TF1_code, TF2_code):
+    def __init__(self, chromosome, tf1_name, tf1_code, tf2_code):
         self.chr = chromosome
-        self.TF1_name = TF1_name
-        self.TF1_code = TF1_code
-        self.TF2_code = TF2_code
+        self.tf1_name = tf1_name
+        self.tf1_code = tf1_code
+        self.tf2_code = tf2_code
     
     def __repr__(self):
         return ("%s %s %s %s" % 
-               (self.chr, self.TF1_name, self.TF1_code, self.TF2_code))
+               (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 def all(argv):
     pass
@@ -23,7 +23,32 @@ def run(argv):
     
     with open("log", "a") as sys.stdout:
         print "Processing: %s" % args
+        
+        # file preparation
+        
+        # create data array
+        data = [0] * MAX_ARRAY_SIZE
+        
+        # create objects
+        rmsk = RMSK(args.chr)
+        chipseq = ChipSeq(args.chr, args.tf1_code)
+        tf1 = TFBS(args.chr, args.tf1_code, 1)
+        tf2 = TFBS(args.chr, args.tf2_code, 2)
+        
+        # fill data array
+        rmsk.fill(data)    # RepeatMasker + 10
+        chipseq.fill(data) # ChIP-Seq     +  1
+        
+        # fill TFBS lists
+        tf1.fill()
+        tf2.fill()
+        
+        generate_data(args, chromosome, tf1, tf2)
+        
         print "Completed: %s" % args
+
+def generate_data(args, chromosome, tf1, tf2):
+    pass
 
 def main(argv=sys.argv[1:]):
     # command line processing

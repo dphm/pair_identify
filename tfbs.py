@@ -24,7 +24,7 @@ class TFBS(object):
                 except ValueError:
                     continue
         
-        if self.kind == "MINOR":
+        if self.kind == 2:
             # remove TFBS input file
             call("rm -f %s" % self.filepath, shell=True)
         
