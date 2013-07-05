@@ -65,16 +65,16 @@ def setup(args):
         return "Success"
     
     def rmsk_err():
-        return "Error: unable to prepare %s" % rmsk_out
+        return "Error: unable to prepare rmsk file"
     
     def chip_err():
-        return "Error: unable to prepare %s" % chip_out
+        return "Error: unable to prepare chip file"
     
     def tf1_err():
-        return "Error: unable to prepare %s" % tf1_out
+        return "Error: unable to prepare tf1 file"
     
     def tf2_err():
-        return "Error: unable to prepare %s" % tf2_out
+        return "Error: unable to prepare tf2 file"
         
     exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
         
