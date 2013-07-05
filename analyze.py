@@ -61,54 +61,25 @@ def run(argv):
         print "Completed: %s" % args
 
 def setup(args):
-    chromosome = args.chr
-    tf1_name   = args.tf1_name
-    tf1_code   = args.tf1_code
-    tf2_code   = args.tf2_code
+    exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
     
-    # input filepaths
-    rmsk_in = "%s/data/rmsk.txt.gz" % path
-    chip_in = ("/home/mcb/blanchem/wgEncodeRegTfbsClustered/%s_%s.bed" %
-              (tf1_code[0:6], tf1_name))
-    tf1_in  = "/scratch/blanchem/%s/sites/sites.%s.gz" % (chromosome, tf1_code)
-    tf2_in  = "/scratch/blanchem/%s/sites/sites.%s.gz" % (chromosome, tf2_code)
+    def success():
+        return "Success"
     
-    # output filepaths
-    rmsk_out = "%s/data/%s/rmsk.txt" % (path, chromosome)
-    chip_out = "%s/data/%s/chip_seq_%s.txt" % (path, chromosome, tf1_code[0:6])
-    tf1_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf1_code)
-    tf2_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf2_code)
+    def rmsk_err():
+        return "Error: unable to prepare %s" % rmsk_out
     
-    # prepare textfiles
-    if not os.path.exists(rmsk_out):
-        rmsk_status = call("zcat %s | grep -w %s > %s" %
-                          (rmsk_in, chromosome, rmsk_out), shell=True)
-        if rmsk_status != 0:
-            call("rm -f %s" % rmsk_out, shell=True)
-            return "Error: unable to prepare %s" % rmsk_out
+    def chip_err():
+        return "Error: unable to prepare %s" % chip_out
     
-    if not os.path.exists(chip_out):
-        chip_status = call("grep -w %s %s > %s" %
-                          (chromosome, chip_in, chip_out), shell=True)
-        if chip_status != 0:
-            call("rm -f %s" % chip_out, shell=True)
-            return "Error: unable to prepare %s" % chip_out
+    def tf1_err():
+        return "Error: unable to prepare %s" % tf1_out
     
-    if not os.path.exists(tf1_out):
-        tf1_status = call("zcat %s | grep -w '^0' > %s" %
-                         (tf1_in, tf1_out), shell=True)
-        if tf1_status != 0:
-            call("rm -f %s" % tf1_out, shell=True)
-            return "Error: unable to prepare %s" % tf1_out
-    
-    if not os.path.exists(tf2_out):
-        tf2_status = call("zcat %s | grep -w '^0' > %s" %
-                         (tf2_in, tf2_out), shell=True)
-        if tf2_status != 0:
-            call("rm -f %s" % tf2_out, shell=True)
-            return "Error: unable to prepare %s" % tf2_out
-    
-    return "Success"
+    def tf2_err():
+        return "Error: unable to prepare %s" % tf2_out
+        
+    status = call("./setup.sh %s" % args, shell=True)
+    exit_codes[status]()
 
 def generate_data(args, chromosome, rmsk, chip, tf1, tf2):
     print "generate_data()"
