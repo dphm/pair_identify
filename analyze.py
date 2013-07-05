@@ -49,7 +49,7 @@ def run(argv):
         tf2  = TFBS(args.chr, args.tf2_code, 2)
         
         # fill data array
-        rmsk.fill(data)    # RepeatMasker + 10
+        rmsk.fill(data) # RepeatMasker + 10
         chip.fill(data) # ChIP-Seq     +  1
         
         # fill TFBS lists
