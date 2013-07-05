@@ -56,7 +56,7 @@ def run(argv):
         tf1.fill()
         tf2.fill()
         
-        generate_data(args, args.chr, tf1, tf2)
+        generate_data(args, args.chr, rmsk, chip, tf1, tf2)
         
         print "Completed: %s" % args
 
@@ -106,7 +106,7 @@ def setup(args):
     
     return "Success"
 
-def generate_data(args, chromosome, tf1, tf2):
+def generate_data(args, chromosome, rmsk, chip, tf1, tf2):
     print "generate_data()"
 
 def main(argv=sys.argv[1:]):
