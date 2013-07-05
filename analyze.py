@@ -81,6 +81,9 @@ def setup(args):
     status = call("./setup.sh %s" % args, shell=True)
     exit_codes[status]()
     
+    print status
+    print exit_codes[status]
+    
     return "This should not happen"
 
 def generate_data(args, chromosome, rmsk, chip, tf1, tf2):
