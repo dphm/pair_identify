@@ -4,7 +4,7 @@ import sys
 from rmsk import RMSK
 from chipseq import ChipSeq
 from tfbs import TFBS
-from os import mkdir, path.exists
+from os import mkdir, path
 
 path = "/scratch/dpham4"
 
@@ -79,13 +79,13 @@ def setup(args):
     tf2_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf2_code)
     
     # prepare textfiles
-    if not os.path.exists(rmsk_out):
+    if not path.exists(rmsk_out):
         pass
-    if not os.path.exists(chip_out):
+    if not path.exists(chip_out):
         pass
-    if not os.path.exists(tf1_out):
+    if not path.exists(tf1_out):
         pass
-    if not os.path.exists(tf2_out):
+    if not path.exists(tf2_out):
         pass
 
 def generate_data(args, chromosome, tf1, tf2):
