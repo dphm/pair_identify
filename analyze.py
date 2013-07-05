@@ -84,24 +84,28 @@ def setup(args):
         rmsk_status = call("zcat %s | grep -w %s > %s" %
                           (rmsk_in, chromosome, rmsk_out), shell=True)
         if rmsk_status != 0:
+            call("rm -f %s" % rmsk_out, shell=True)
             return "Error: unable to prepare %s" % rmsk_out
     
     if not os.path.exists(chip_out):
         chip_status = call("grep -w %s %s > %s" %
                           (chromosome, chip_in, chip_out), shell=True)
         if chip_status != 0:
+            call("rm -f %s" % chip_out, shell=True)
             return "Error: unable to prepare %s" % chip_out
     
     if not os.path.exists(tf1_out):
         tf1_status = call("zcat %s | grep -w '^0' > %s" %
                          (tf1_in, tf1_out), shell=True)
         if tf1_status != 0:
+            call("rm -f %s" % tf1_out, shell=True)
             return "Error: unable to prepare %s" % tf1_out
     
     if not os.path.exists(tf2_out):
         tf2_status = call("zcat %s | grep -w '^0' > %s" %
                          (tf2_in, tf2_out), shell=True)
         if tf2_status != 0:
+            call("rm -f %s" % tf2_out, shell=True)
             return "Error: unable to prepare %s" % tf2_out
     
     return "Success"
