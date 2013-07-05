@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
+import os
 import sys
 from rmsk import RMSK
 from chipseq import ChipSeq
 from tfbs import TFBS
-from os import mkdir, path
 from subprocess import call
 
 path = "/scratch/dpham4/PI"
@@ -80,25 +80,25 @@ def setup(args):
     tf2_out  = "%s/data/%s/%s.txt" % (path, chromosome, tf2_code)
     
     # prepare textfiles
-    if not path.exists(rmsk_out):
+    if not os.path.exists(rmsk_out):
         rmsk_status = call("zcat %s | grep -w %s > %s" %
                           (rmsk_in, chromosome, rmsk_out), shell=True)
         if rmsk_status != 0:
             return "Error: unable to prepare %s" % rmsk_out
     
-    if not path.exists(chip_out):
+    if not os.path.exists(chip_out):
         chip_status = call("grep -w %s %s > %s" %
                           (chromosome, chip_in, chip_out), shell=True)
         if chip_status != 0:
             return "Error: unable to prepare %s" % chip_out
     
-    if not path.exists(tf1_out):
+    if not os.path.exists(tf1_out):
         tf1_status = call("zcat %s | grep -w '^0' > %s" %
                          (tf1_in, tf1_out), shell=True)
         if tf1_status != 0:
             return "Error: unable to prepare %s" % tf1_out
     
-    if not path.exists(tf2_out):
+    if not os.path.exists(tf2_out):
         tf2_status = call("zcat %s | grep -w '^0' > %s" %
                          (tf2_in, tf2_out), shell=True)
         if tf2_status != 0:
