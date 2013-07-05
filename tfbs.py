@@ -18,7 +18,7 @@ class TFBS(object):
                 
                 try:
                     i = int(line[1])
-                    if 0 <= i < size:
+                    if i >= 0:
                         sites.append(i)
                         num_sites += 1
                 except ValueError:
