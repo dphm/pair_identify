@@ -61,8 +61,6 @@ def run(argv):
         print "Completed: %s" % args
 
 def setup(args):
-    exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
-    
     def success():
         return "Success"
     
@@ -77,6 +75,8 @@ def setup(args):
     
     def tf2_err():
         return "Error: unable to prepare %s" % tf2_out
+        
+    exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
         
     status = call("./setup.sh %s" % args, shell=True)
     exit_codes[status]()
