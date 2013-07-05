@@ -4,7 +4,7 @@ class TFBS(object):
     def __init__(self, chromosome, code, kind):
         self.code = code
         self.kind = kind
-        self.filepath = "/scratch/dpham4/data/%s/%s.txt" % (chromosome, code)
+        self.filepath = "/scratch/dpham4/PI/data/%s/%s.txt" % (chromosome, code)
         self.sites = []
         self.num_sites = 0
     

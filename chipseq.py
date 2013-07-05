@@ -1,7 +1,7 @@
 class ChipSeq(object):
     def __init__(self, chromosome, code):
         self.code = "chip_seq_" + code[0:6]
-        self.filepath = ("/scratch/dpham4/data/%s/%s.txt" %
+        self.filepath = ("/scratch/dpham4/PI/data/%s/%s.txt" %
                         (chromosome, self.code))
     
     def fill(self, data):

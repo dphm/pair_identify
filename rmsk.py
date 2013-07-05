@@ -1,6 +1,6 @@
 class RMSK(object):
     def __init__(self, chromosome):
-        self.filepath = "/scrach/dpham4/data/%s/rmsk.txt" % chromosome
+        self.filepath = "/scrach/dpham4/PI/data/%s/rmsk.txt" % chromosome
     
     def fill(self, data):
         with open(self.filepath) as f_in:
