@@ -23,7 +23,7 @@ class ARGS(object):
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 def all(argv):
-    pass
+    print "all()"
 
 def run(argv):
     args = ARGS(argv[0], argv[1], argv[2], argv[3])
@@ -107,7 +107,7 @@ def setup(args):
     return "Success"
 
 def generate_data(args, chromosome, tf1, tf2):
-    pass
+    print "generate_data()"
 
 def main(argv=sys.argv[1:]):
     # command line processing
