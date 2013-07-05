@@ -7,7 +7,7 @@ from tfbs import TFBS
 from os import mkdir, path
 from subprocess import call
 
-path = "/scratch/dpham4"
+path = "/scratch/dpham4/PI"
 
 MAX_ARRAY_SIZE = 250000000
 
