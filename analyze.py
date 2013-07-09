@@ -145,8 +145,14 @@ def setup(args):
     return exit_codes[status]()
 
 def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
-    print "generate_data()"
-    # d_TTT, d_FTT, freq, count = study(data, tf1, tf1, max_dist)
+    d_TTT, d_FTT, freq, count = study(data, tf1, tf1, max_dist)
+    
+    for key in freq:
+        print "freq[%i] = %i" % key, freq[key]
+    
+    for key in count:
+        print "count[%s] = %i" % key, count[key]
+    
     # z-scores
     # write to files
 
