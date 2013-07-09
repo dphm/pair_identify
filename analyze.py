@@ -70,7 +70,7 @@ def get_args(argv):
             tf2_code = tfbs.split(".")[1]
         
             if tf1_code != tf2_code:
-                all_args.append([chromosome, tf1_name, tf1_code, tf2_code])
+                all_args.append(ARGS(chromosome, tf1_name, tf1_code, tf2_code))
     
     return all_args
 
