@@ -4,6 +4,8 @@ import os
 import sys
 import time
 import multiprocessing as mp
+import stats
+import casedata
 from rmsk import RMSK
 from chipseq import ChipSeq
 from tfbs import TFBS
