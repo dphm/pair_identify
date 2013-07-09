@@ -146,7 +146,7 @@ def setup(args):
 
 def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     print "generate_data()"
-    # case study
+    # d_TTT, d_FTT, freq, count = study(data, tf1, tf1, max_dist)
     # z-scores
     # write to files
 
