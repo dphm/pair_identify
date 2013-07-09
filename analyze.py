@@ -148,7 +148,7 @@ def setup(args):
     return exit_codes[status]()
 
 def generate_data(q, args, chromosome, data, tf1, tf2):
-    d_TTT, d_FTT, freq, count = study(data, tf1, tf1, MAX_TFBS_DIST)
+    d_TTT, d_FTT, freq, count = study(data, tf1, tf2, MAX_TFBS_DIST)
     
     for key in freq:
         print "freq[%i] = %i" % (key, freq[key])
