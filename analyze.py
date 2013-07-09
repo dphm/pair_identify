@@ -146,6 +146,9 @@ def setup(args):
 
 def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     print "generate_data()"
+    # case study
+    # z-scores
+    # write to files
 
 def main(argv=sys.argv[1:]):
     # command line processing
