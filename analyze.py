@@ -121,7 +121,7 @@ def run(q, argv):
     tf1.fill()
     tf2.fill()
     
-    generate_data(q, args, args.chr, rmsk, chip, tf1, tf2)
+    generate_data(q, args, args.chr, data, tf1, tf2)
     
     q.put(log, "Completed: %s" % args)
 
@@ -146,7 +146,7 @@ def setup(args):
     status = call("./setup.sh %s" % args, shell=True)
     return exit_codes[status]()
 
-def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
+def generate_data(q, args, chromosome, data, tf1, tf2):
     d_TTT, d_FTT, freq, count = study(data, tf1, tf1, max_dist)
     
     for key in freq:
