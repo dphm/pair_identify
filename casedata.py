@@ -19,8 +19,11 @@ def study(data, tf1, tf2, max_dist):
     freq = defaultdict(int)
     count = defaultdict(int)
     
-    tf1_len = len(tf1)
-    tf2_len = len(tf2)
+    tf1_sites = tf1.sites
+    tf2_sites = tf2.sites
+    
+    tf1_len = len(tf1.sites)
+    tf2_len = len(tf2.sites)
     
     l = 0
     r = 0
@@ -29,8 +32,8 @@ def study(data, tf1, tf2, max_dist):
     r_seek = 0
     
     while l_seek < tf1_len and r_seek < tf2_len:
-        site1 = tf1[l_seek]
-        site2 = tf2[r_seek]
+        site1 = tf1_sites[l_seek]
+        site2 = tf2_sites[r_seek]
         dist = abs(site1 - site2)
         
         if dist <= max_dist:
@@ -65,8 +68,8 @@ def study(data, tf1, tf2, max_dist):
         if l_seek >= tf1_len or r_seek >= tf2_len:
             break
         
-        site1 = tf1[l_seek]
-        site2 = tf2[r_seek]
+        site1 = tf1_sites[l_seek]
+        site2 = tf2_sites[r_seek]
         dist = abs(site1 - site2)
         
         if dist <= max_dist:
