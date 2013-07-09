@@ -24,10 +24,70 @@ class ARGS(object):
         return ("%s %s %s %s" % 
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
-def all(argv):
-    print "all()"
 
-def run(argv):
+def all(argv):
+    call("echo -n > log", shell=True) # clear log
+    all_args = get_args(argv)
+    
+    mgr = mp.Manager()
+    q = mgr.Queue()
+    pool = mp.Pool(processes=6, maxtasksperchild=1)
+    
+    appender = pool.apply_async(file_append, (q,))
+    jobs = []
+    
+    for args in all_args:
+        job = pool.apply_async(run, (q, args))
+        jobs.append(job)
+    
+    for job in jobs:
+        job.get()
+    
+    q.put(None)
+    pool.close()
+
+def get_args(argv):
+    all_args = []
+    
+    chromosome = argv[1]
+    # chippath = "/scratch/dpham4/data/chip_seq_list.txt"
+    tfbspath = "/scratch/dpham4/data/%s/tfbs_list.txt" % chromosome
+    
+    # with open(chippath) as chip_list:
+    #    # MXXXXX_NAME.bed
+    #    for chip in chip_list:
+    #        tf1 = chip.split("_")
+    #        tf1_code = tf1[0]
+    #        tf1_name = tf1[1].split(".")[0]
+    
+    tf1_code = "M00975"
+    tf1_name = "RFX5"
+
+    with open(tfbspath) as tfbs_list:
+        # sites.MXXXXX.gz
+        for tfbs in tfbs_list:
+            tf2_code = tfbs.split(".")[1]
+        
+            if tf1_code != tf2_code:
+                all_args.append(ARGS(chromosome, tf1_name, tf1_code, tf2_code))
+    
+    return all_args
+
+def file_append(q):
+    while 1:
+        data = q.get()
+        
+        if data == None:
+            break
+        
+        file, message = data
+        
+        with open(file, "a") as f_out:
+            f_out.write(message)
+        
+        time.sleep(0.001)
+
+def run(q, argv):
     args = ARGS(argv[0], argv[1], argv[2], argv[3])
     
     with open("log", "a") as sys.stdout:
@@ -91,7 +151,18 @@ def main(argv=sys.argv[1:]):
     arg_len = len(argv)
     
     if arg_len == 4:
-        run(argv)
+        mgr = mp.Manager()
+        q = mgr.Queue()
+        pool = mp.Pool(processes=2, maxtasksperchild=1)
+        
+        appender = pool.apply_async(file_append, (q,))
+        
+        job = pool.apply_async(run, (q, argv))
+        job.get()
+        
+        q.put(None)
+        pool.close()
+        
         return 0
     elif arg_len == 2:
         if argv[0] == "--all":
