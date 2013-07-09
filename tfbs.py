@@ -10,7 +10,6 @@ class TFBS(object):
     
     def fill(self):
         sites = []
-        num_sites = 0
         
         with open(self.filepath) as f_in:
             for l in f_in:
@@ -20,7 +19,6 @@ class TFBS(object):
                     i = int(line[1])
                     if i >= 0:
                         sites.append(i)
-                        num_sites += 1
                 except ValueError:
                     continue
         
@@ -29,4 +27,4 @@ class TFBS(object):
             call("rm -f %s" % self.filepath, shell=True)
         
         self.sites = sites
-        self.num_sites = num_sites
+        self.num_sites = len(sites)
