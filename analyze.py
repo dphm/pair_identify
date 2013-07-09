@@ -14,6 +14,7 @@ from subprocess import call
 path = "/scratch/dpham4/PI"
 
 MAX_ARRAY_SIZE = 250000000
+MAX_TFBS_DIST = 50
 
 class ARGS(object):
     def __init__(self, chromosome, tf1_name, tf1_code, tf2_code):
@@ -147,7 +148,7 @@ def setup(args):
     return exit_codes[status]()
 
 def generate_data(q, args, chromosome, data, tf1, tf2):
-    d_TTT, d_FTT, freq, count = study(data, tf1, tf1, max_dist)
+    d_TTT, d_FTT, freq, count = study(data, tf1, tf1, MAX_TFBS_DIST)
     
     for key in freq:
         print "freq[%i] = %i" % key, freq[key]
