@@ -37,8 +37,9 @@ def all(argv):
     jobs = []
     
     for args in all_args:
-        job = pool.apply_async(run, (q, args))
-        jobs.append(job)
+        print args
+        # job = pool.apply_async(run, (q, args))
+        # jobs.append(job)
     
     for job in jobs:
         job.get()
@@ -69,7 +70,7 @@ def get_args(argv):
             tf2_code = tfbs.split(".")[1]
         
             if tf1_code != tf2_code:
-                all_args.append(ARGS(chromosome, tf1_name, tf1_code, tf2_code))
+                all_args.append([chromosome, tf1_name, tf1_code, tf2_code])
     
     return all_args
 
@@ -83,44 +84,44 @@ def file_append(q):
         file, message = data
         
         with open(file, "a") as f_out:
-            f_out.write(message)
+            f_out.write("%s\n" % message)
         
         time.sleep(0.001)
 
 def run(q, argv):
     args = ARGS(argv[0], argv[1], argv[2], argv[3])
+    log = "log"
     
-    with open("log", "a") as sys.stdout:
-        print "Processing: %s" % args
-        
-        # file preparation
-        status = setup(args)
-        
-        if status != "Success":
-            print status
-            print "Failed: %s" % args
-            return
-        
-        # create data array
-        data = [0] * MAX_ARRAY_SIZE
-        
-        # create objects
-        rmsk = RMSK(args.chr)
-        chip = ChipSeq(args.chr, args.tf1_code)
-        tf1  = TFBS(args.chr, args.tf1_code, 1)
-        tf2  = TFBS(args.chr, args.tf2_code, 2)
-        
-        # fill data array
-        rmsk.fill(data) # RepeatMasker + 10
-        chip.fill(data) # ChIP-Seq     +  1
-        
-        # fill TFBS lists
-        tf1.fill()
-        tf2.fill()
-        
-        generate_data(args, args.chr, rmsk, chip, tf1, tf2)
-        
-        print "Completed: %s" % args
+    q.put(log, "Processing: %s" % args)
+    
+    # file preparation
+    status = setup(args)
+    
+    if status != "Success":
+        q.put(log, status)
+        q.put(log, "Failed: %s" % args)
+        return
+    
+    # create data array
+    data = [0] * MAX_ARRAY_SIZE
+    
+    # create objects
+    rmsk = RMSK(args.chr)
+    chip = ChipSeq(args.chr, args.tf1_code)
+    tf1  = TFBS(args.chr, args.tf1_code, 1)
+    tf2  = TFBS(args.chr, args.tf2_code, 2)
+    
+    # fill data array
+    rmsk.fill(data) # RepeatMasker + 10
+    chip.fill(data) # ChIP-Seq     +  1
+    
+    # fill TFBS lists
+    tf1.fill()
+    tf2.fill()
+    
+    generate_data(q, args, args.chr, rmsk, chip, tf1, tf2)
+    
+    q.put(log, "Completed: %s" % args)
 
 def setup(args):
     def success():
@@ -143,7 +144,7 @@ def setup(args):
     status = call("./setup.sh %s" % args, shell=True)
     return exit_codes[status]()
 
-def generate_data(args, chromosome, rmsk, chip, tf1, tf2):
+def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     print "generate_data()"
 
 def main(argv=sys.argv[1:]):
