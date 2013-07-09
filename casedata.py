@@ -4,6 +4,7 @@ def count_sites(data, site1, site2, dist, d_TTT, d_FTT, freq, count):
     # exclude sites in RepeatMasker regions
     if data[site1] < 10 and data[site2] < 10:
         csv_row = "%i,%i,%i" % (site1, site2, dist)
+        print csv_row
         freq[dist] += 1
         
         # in ChIP-seq region
