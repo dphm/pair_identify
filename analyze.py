@@ -4,11 +4,11 @@ import os
 import sys
 import time
 import multiprocessing as mp
-import stats
 from rmsk import RMSK
 from chipseq import ChipSeq
 from tfbs import TFBS
 from casedata import study
+from stats import z_scores
 from subprocess import call
 
 path = "/scratch/dpham4/PI"
