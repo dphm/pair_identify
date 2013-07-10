@@ -152,12 +152,6 @@ def setup(args):
 def generate_data(q, args, chromosome, data, tf1, tf2):
     d_TTT, d_FTT, freq, count = study(data, tf1, tf2, MAX_TFBS_DIST)
     
-    for key in freq:
-        print "freq[%i] = %i" % (key, freq[key])
-    
-    for key in count:
-        print "count[%s] = %i" % (key, count[key])
-    
     # z-scores
     # write to files
 
