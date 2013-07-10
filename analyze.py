@@ -159,7 +159,7 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
     sitepath = "%s/s_%s.txt" % (filepath, tf2.code)
     dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2.code)
     dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2.code)
-    freqpath = "%s/f_%s.txt" % (filepath, tf2.code)
+    freqpath = "%s/f_%s.csv" % (filepath, tf2.code)
     zpath = "%s/data/z.txt" % path
     
     if not os.path.exists(filepath):
@@ -191,7 +191,7 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
             if d in z:
                 score = z[d]
             
-            f_freq.write("%i %i %f" % (d, freq[d], score))
+            f_freq.write("%i,%i,%f\n" % (d, freq[d], score))
             
             if score >= Z_THRESHOLD and high_z != True:
                 high_z = True
