@@ -1,17 +1,10 @@
 from collections import defaultdict
 
-def count_pairs(data, site1, site2, dist, d_TTT, d_FTT, freq):
-    # exclude sites in RepeatMasker regions
-    if data[site1] < 10 and data[site2] < 10:
-        csv_row = "%i,%i,%i" % (site1, site2, dist)
-        freq[dist] += 1
-        
-        # in ChIP-seq region
-        if data[site1] % 10 == 1:
-            d_TTT.append(csv_row)
-        # outside ChIP-seq region
-        else:
-            d_FTT.append(csv_row)
+def in_chip(data, site1):
+    if data[site1] % 10 == 1:
+        return True
+    else:
+        return False
 
 def study(data, tf1, tf2, max_dist):
     d_TTT = []
@@ -40,13 +33,26 @@ def study(data, tf1, tf2, max_dist):
             dist = abs(site1 - site2)
         
         if not finished and dist <= max_dist:
-            count_pairs(data, site1, site2, dist, d_TTT, d_FTT, freq)
+            # exclude sites in RepeatMasker regions
+            if data[site1] < 10 and data[site2] < 10:
+                csv_row = "%i,%i,%i" % (site1, site2, dist)
+                freq[dist] += 1
+        
+                if in_chip(data,site):
+                    d_TTT.append(csv_row)
+                else:
+                    d_FTT.append(csv_row)
             
             if site1 >= site2:
                 l_seek += 1
             else:
                 r_seek += 1
         else:
+            if in_chip(data, site1):
+                count["TTF"] += 1
+            else:
+                count["FTF"] += 1
+            
             if site1 >= site2:
                 r += 1
                 r_seek = r
