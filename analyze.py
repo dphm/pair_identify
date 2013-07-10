@@ -103,7 +103,7 @@ def run(q, argv):
     status = setup(args)
     
     if status != "Success":
-        q.put(log, status)
+        q.put(log, "%s\n" % status)
         q.put(log, "Failed: %s\n" % args)
         return
     
@@ -130,19 +130,19 @@ def run(q, argv):
 
 def setup(args):
     def success():
-        return "Success\n"
+        return "Success"
     
     def rmsk_err():
-        return "Error: unable to prepare rmsk file\n"
+        return "Error: unable to prepare rmsk file"
     
     def chip_err():
-        return "Error: unable to prepare chip file\n"
+        return "Error: unable to prepare chip file"
     
     def tf1_err():
-        return "Error: unable to prepare tf1 file\n"
+        return "Error: unable to prepare tf1 file"
     
     def tf2_err():
-        return "Error: unable to prepare tf2 file\n"
+        return "Error: unable to prepare tf2 file"
         
     exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
         
