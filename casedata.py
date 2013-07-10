@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-def count_sites(data, site1, site2, dist, d_TTT, d_FTT, freq):
+def count_pairs(data, site1, site2, dist, d_TTT, d_FTT, freq):
     # exclude sites in RepeatMasker regions
     if data[site1] < 10 and data[site2] < 10:
         csv_row = "%i,%i,%i" % (site1, site2, dist)
@@ -40,7 +40,7 @@ def study(data, tf1, tf2, max_dist):
             dist = abs(site1 - site2)
         
         if not finished and dist <= max_dist:
-            count_sites(data, site1, site2, dist, d_TTT, d_FTT, freq, count)
+            count_pairs(data, site1, site2, dist, d_TTT, d_FTT, freq)
             
             if site1 >= site2:
                 l_seek += 1
