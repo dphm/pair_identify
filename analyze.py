@@ -89,7 +89,7 @@ def file_append(q):
         file, message = data
         
         with open(file, "a") as f_out:
-            f_out.write("%s\n" % message)
+            f_out.write(message)
         
         time.sleep(0.001)
 
@@ -97,14 +97,14 @@ def run(q, argv):
     args = ARGS(argv[0], argv[1], argv[2], argv[3])
     log = "log"
     
-    q.put(log, "Processing: %s" % args)
+    q.put(log, "Processing: %s\n" % args)
     
     # file preparation
     status = setup(args)
     
     if status != "Success":
         q.put(log, status)
-        q.put(log, "Failed: %s" % args)
+        q.put(log, "Failed: %s\n" % args)
         return
     
     # create data array
@@ -126,23 +126,23 @@ def run(q, argv):
     
     generate_data(q, args, args.chr, data, tf1, tf2)
     
-    q.put(log, "Completed: %s" % args)
+    q.put(log, "Completed: %s\n" % args)
 
 def setup(args):
     def success():
-        return "Success"
+        return "Success\n"
     
     def rmsk_err():
-        return "Error: unable to prepare rmsk file"
+        return "Error: unable to prepare rmsk file\n"
     
     def chip_err():
-        return "Error: unable to prepare chip file"
+        return "Error: unable to prepare chip file\n"
     
     def tf1_err():
-        return "Error: unable to prepare tf1 file"
+        return "Error: unable to prepare tf1 file\n"
     
     def tf2_err():
-        return "Error: unable to prepare tf2 file"
+        return "Error: unable to prepare tf2 file\n"
         
     exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
         
@@ -196,7 +196,7 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
                 high_z = True
     
     if high_z:
-        q.put((zpath, str(args)))
+        q.put((zpath, "%s\n" % args))
     
 def main(argv=sys.argv[1:]):
     # command line processing
