@@ -150,6 +150,16 @@ def setup(args):
     return exit_codes[status]()
 
 def generate_data(q, args, chromosome, data, tf1, tf2):
+    zpath = "%s/data/z.txt" % path
+    filepath = "%s/data/%s/%s" % (path, chromosome, tf1.code)
+    sitepath = "%s/s_%s.txt" % (filepath, tf2.code)
+    dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2.code)
+    dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2.code)
+    freqpath = "%s/f_%s.txt" % (filepath, tf2.code)
+    
+    if not os.path.exists(filepath):
+        os.mkdir(filepath)
+    
     d_TTT, d_FTT, freq, count = study(data, tf1, tf2, MAX_TFBS_DIST)
     
     # z-scores
