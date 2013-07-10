@@ -191,7 +191,7 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
             if d in z:
                 score = z[d]
             
-            f_freq.write("%i %i %f" % (key, freq[key], score))
+            f_freq.write("%i %i %f" % (d, freq[d], score))
             
             if score >= Z_THRESHOLD and high_z != True:
                 high_z = True
