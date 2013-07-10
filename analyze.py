@@ -197,7 +197,7 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
                 high_z = True
     
     if high_z:
-        q.put((zpath, args))
+        q.put((zpath, str(args)))
     
 def main(argv=sys.argv[1:]):
     # command line processing
