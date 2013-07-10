@@ -83,12 +83,12 @@ def file_append(q):
     while 1:
         data = q.get()
         
+        print data
+        
         if data == None:
             break
         
         file, message = data
-        
-        print file, message
         
         # with open(file, "a") as f_out:
             # f_out.write(message)
