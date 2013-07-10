@@ -151,7 +151,7 @@ def setup(args):
 
 def generate_data(q, args, chromosome, data, tf1, tf2):
     # generated data
-    d_TTT, d_FTT, freq, count = study(data, tf1, tf2, MAX_TFBS_DIST)
+    d_TTT, d_FTT, freq = study(data, tf1, tf2, MAX_TFBS_DIST)
     z = z_scores(freq, MIN_MEAN_CUTOFF)
     
     # output files
@@ -169,9 +169,8 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
     with open(sitepath, "w") as f_out:
         f_out.write("%s %s\n" % (tf1.code, tf1.num_sites))
         f_out.write("%s %s\n" % (tf2.code, tf2.num_sites))
-        
-        for c in count:
-            f_out.write("%s %i\n" % (c, count[c]))
+        f_out.write("%s %i\n" % ("TTT", len(d_TTT)))
+        f_out.write("%s %i\n" % ("FTT", len(d_FTT)))
     
     # write positions and distances
     with open(dTTTpath, "w") as f_TTT:

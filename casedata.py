@@ -10,7 +10,6 @@ def study(data, tf1, tf2, max_dist):
     d_TTT = []
     d_FTT = []
     freq = defaultdict(int)
-    count = defaultdict(int)
     
     tf1_sites = tf1.sites
     tf2_sites = tf2.sites
@@ -35,7 +34,7 @@ def study(data, tf1, tf2, max_dist):
         if not finished and dist <= max_dist:
             # exclude sites in RepeatMasker regions
             if data[site1] < 10 and data[site2] < 10:
-                csv_row = "%i,%i,%i" % (site1, site2, dist)
+                csv_row = "%i,%i,%i\n" % (site1, site2, dist)
                 freq[dist] += 1
         
                 if in_chip(data, site1):
@@ -48,11 +47,6 @@ def study(data, tf1, tf2, max_dist):
             else:
                 r_seek += 1
         else:
-            if in_chip(data, site1):
-                count["TTF"] += 1
-            else:
-                count["FTF"] += 1
-            
             if site1 >= site2:
                 r += 1
                 r_seek = r
@@ -62,7 +56,4 @@ def study(data, tf1, tf2, max_dist):
                 l_seek = l
                 r_seek = r
     
-    count["TTT"] = len(d_TTT)
-    count["FTT"] = len(d_FTT)
-    
-    return (d_TTT, d_FTT, freq, count)
+    return (d_TTT, d_FTT, freq)
