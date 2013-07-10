@@ -1,11 +1,5 @@
 from collections import defaultdict
 
-def in_chip(data, site1):
-    if data[site1] % 10 == 1:
-        return True
-    else:
-        return False
-
 def study(data, tf1, tf2, max_dist):
     d_TTT = []
     d_FTT = []
@@ -37,7 +31,7 @@ def study(data, tf1, tf2, max_dist):
                 csv_row = "%i,%i,%i\n" % (site1, site2, dist)
                 freq[dist] += 1
         
-                if in_chip(data, site1):
+                if data[site1] % 10 == 1:
                     d_TTT.append(csv_row)
                 else:
                     d_FTT.append(csv_row)
