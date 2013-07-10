@@ -99,14 +99,14 @@ def run(q, argv):
     args = ARGS(argv[0], argv[1], argv[2], argv[3])
     log = "log"
     
-    q.put(log, "Processing: %s\n" % args)
+    q.put((log, "Processing: %s\n" % args))
     
     # file preparation
     status = setup(args)
     
     if status != "Success":
-        q.put(log, "%s\n" % status)
-        q.put(log, "Failed: %s\n" % args)
+        q.put((log, "%s\n" % status))
+        q.put((log, "Failed: %s\n" % args))
         return
     
     # create data array
@@ -128,7 +128,7 @@ def run(q, argv):
     
     generate_data(q, args, args.chr, data, tf1, tf2)
     
-    q.put(log, "Completed: %s\n" % args)
+    q.put((log, "Completed: %s\n" % args))
 
 def setup(args):
     def success():
