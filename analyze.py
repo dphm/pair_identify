@@ -150,21 +150,55 @@ def setup(args):
     return exit_codes[status]()
 
 def generate_data(q, args, chromosome, data, tf1, tf2):
-    zpath = "%s/data/z.txt" % path
+    # generated data
+    d_TTT, d_FTT, freq, count = study(data, tf1, tf2, MAX_TFBS_DIST)
+    z = z_scores(freq, MIN_MEAN_CUTOFF)
+    
+    # output files
     filepath = "%s/data/%s/%s" % (path, chromosome, tf1.code)
     sitepath = "%s/s_%s.txt" % (filepath, tf2.code)
     dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2.code)
     dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2.code)
     freqpath = "%s/f_%s.txt" % (filepath, tf2.code)
+    zpath = "%s/data/z.txt" % path
     
     if not os.path.exists(filepath):
         os.mkdir(filepath)
     
-    d_TTT, d_FTT, freq, count = study(data, tf1, tf2, MAX_TFBS_DIST)
+    # write number of sites and cases
+    with open(sitepath, "w") as f_out:
+        f_out.write("%s %s\n" % (tf1.code, tf1.num_sites))
+        f_out.write("%s %s\n" % (tf2.code, tf2.num_sites))
+        
+        for c in count:
+            f_out.write("%s %i\n" % (c, count[c]))
     
-    # z-scores
-    # write to files
-
+    # write positions and distances
+    with open(dTTTpath, "w") as f_TTT:
+        for d in d_TTT:
+            f_TTT.write(d)
+    
+    with open(dFTTpath, "w") as f_FTT:
+        for d in d_FTT:
+            f_FTT.write(d)
+    
+    # write frequencies and Z-scores
+    high_z = False
+    
+    with open(freqpath, "w") as f_freq:
+        for d in freq:
+            score = None
+            if d in z:
+                score = z[d]
+            
+            f_freq.write("%i %i %f" % (key, freq[key], score))
+            
+            if score >= Z_THRESHOLD and high_z != True:
+                high_z = True
+    
+    if high_z:
+        q.put((zpath, args))
+    
 def main(argv=sys.argv[1:]):
     # command line processing
     arg_len = len(argv)
