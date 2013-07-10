@@ -15,6 +15,8 @@ path = "/scratch/dpham4/PI"
 
 MAX_ARRAY_SIZE = 250000000
 MAX_TFBS_DIST = 50
+MIN_MEAN_CUTOFF = 20
+Z_THRESHOLD = 5
 
 class ARGS(object):
     def __init__(self, chromosome, tf1_name, tf1_code, tf2_code):
