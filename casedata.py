@@ -10,11 +10,9 @@ def count_sites(data, site1, site2, dist, d_TTT, d_FTT, freq, count):
         # in ChIP-seq region
         if data[site1] % 10 == 1:
             d_TTT.append(csv_row)
-            count["TTT"] += 1
         # outside ChIP-seq region
         else:
             d_FTT.append(csv_row)
-            count["FTT"] += 1
 
 def study(data, tf1, tf2, max_dist):
     d_TTT = []
@@ -58,5 +56,8 @@ def study(data, tf1, tf2, max_dist):
                 l += 1
                 l_seek = l
                 r_seek = r
+    
+    count["TTT"] = len(d_TTT)
+    count["FTT"] = len(d_FTT)
     
     return (d_TTT, d_FTT, freq, count)
