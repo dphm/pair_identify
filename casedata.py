@@ -38,7 +38,7 @@ def study(data, tf1, tf2, max_dist):
                 csv_row = "%i,%i,%i" % (site1, site2, dist)
                 freq[dist] += 1
         
-                if in_chip(data,site):
+                if in_chip(data, site1):
                     d_TTT.append(csv_row)
                 else:
                     d_FTT.append(csv_row)
