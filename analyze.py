@@ -88,8 +88,10 @@ def file_append(q):
         
         file, message = data
         
-        with open(file, "a") as f_out:
-            f_out.write(message)
+        print file, message
+        
+        # with open(file, "a") as f_out:
+            # f_out.write(message)
         
         time.sleep(0.001)
 
