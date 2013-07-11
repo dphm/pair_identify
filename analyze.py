@@ -124,10 +124,6 @@ def run(q, args):
     rmsk.fill(data) # RepeatMasker + 10
     chip.fill(data) # ChIP-Seq     +  1
     
-    # fill TFBS lists
-    tf1.fill()
-    tf2.fill()
-    
     generate_data(q, args, args.chr, data, tf1, tf2)
     
     q.put((log, "Completed: %s\n" % args))

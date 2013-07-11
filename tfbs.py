@@ -7,6 +7,8 @@ class TFBS(object):
         self.filepath = "/scratch/dpham4/PI/data/%s/%s.txt" % (chromosome, code)
         self.sites = None
         self.num_sites = 0
+        
+        self.fill()
     
     def fill(self):
         sites = []
