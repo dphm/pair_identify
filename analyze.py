@@ -182,21 +182,18 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
             f_FTT.write(d)
     
     # write frequencies and Z-scores
-    high_z = False
-    
     with open(freqpath, "w") as f_freq:
         for d in freq:
             score = None
             if d in z:
                 score = z[d]
             
-            f_freq.write("%i,%i,%f\n" % (d, freq[d], score))
-            
-            if score >= Z_THRESHOLD and high_z != True:
-                high_z = True
+            f_freq.write("%i,%i,%s\n" % (d, freq[d], score))
     
-    if high_z:
-        q.put((zpath, "%s\n" % args))
+    highscore = max(z)
+    
+    if highscore >= Z_THRESHOLD:
+        q.put((zpath, "%s, max Z-score: %s\n" % (args, highscore)))
     
 def main(argv=sys.argv[1:]):
     # command line processing
