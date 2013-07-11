@@ -36,12 +36,12 @@ class MP(object):
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=maxtasks)
     def activate(self, all_args):
-        appender = pool.apply_async(file_append, (self.q,))
+        appender = self.pool.apply_async(file_append, (self.q,))
         jobs = []
         
         for args in all_args:
             print args
-            # job = pool.apply_async(run, (self.q, args))
+            # job = self.pool.apply_async(run, (self.q, args))
             # jobs.append(job)
         
         for job in jobs:
