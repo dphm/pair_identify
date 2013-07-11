@@ -40,7 +40,7 @@ class MP(object):
         jobs = []
         
         for args in all_args:
-            print args
+            self.q.put(("test.txt", args))
             # job = self.pool.apply_async(run, (self.q, args))
             # jobs.append(job)
         
