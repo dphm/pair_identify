@@ -111,20 +111,13 @@ def run(q, args):
         q.put((log, "Failed: %s\n" % args))
         return
     
-    # create data array
-    data = [0] * MAX_ARRAY_SIZE
-    
     # create objects
     rmsk = RMSK(args.chr)
     chip = ChipSeq(args.chr, args.tf1_code)
     tf1  = TFBS(args.chr, args.tf1_code, 1)
     tf2  = TFBS(args.chr, args.tf2_code, 2)
     
-    # fill data array
-    rmsk.fill(data) # RepeatMasker + 10
-    chip.fill(data) # ChIP-Seq     +  1
-    
-    generate_data(q, args, args.chr, data, tf1, tf2)
+    generate_data(q, args, args.chr, rmsk, chip, tf1, tf2)
     
     q.put((log, "Completed: %s\n" % args))
 
@@ -149,9 +142,9 @@ def setup(args):
     status = call("./setup.sh %s" % args, shell=True)
     return exit_codes[status]()
 
-def generate_data(q, args, chromosome, data, tf1, tf2):
+def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     # generated data
-    d_TTT, d_FTT, freq = study(data, tf1, tf2, MAX_TFBS_DIST)
+    d_TTT, d_FTT, freq = study(rmsk, chip, tf1, tf2, MAX_TFBS_DIST)
     z = z_scores(freq, MIN_MEAN_CUTOFF)
     
     # output files

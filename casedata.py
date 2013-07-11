@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-def study(data, tf1, tf2, max_dist):
+def study(rmsk, chip, tf1, tf2, max_dist):
     d_TTT = []
     d_FTT = []
     freq = defaultdict(int)
@@ -27,11 +27,11 @@ def study(data, tf1, tf2, max_dist):
         
         if not finished and dist <= max_dist:
             # exclude sites in RepeatMasker regions
-            if data[site1] < 10 and data[site2] < 10:
+            if site1 not in rmsk.data and site2 not in rmsk.data:
                 csv_row = "%i,%i,%i\n" % (site1, site2, dist)
                 freq[dist] += 1
         
-                if data[site1] % 10 == 1:
+                if site1 in chip.data:
                     d_TTT.append(csv_row)
                 else:
                     d_FTT.append(csv_row)

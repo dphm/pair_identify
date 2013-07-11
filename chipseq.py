@@ -3,8 +3,13 @@ class ChipSeq(object):
         self.code = "chip_seq_" + code[0:6]
         self.filepath = ("/scratch/dpham4/PI/data/%s/%s.txt" %
                         (chromosome, self.code))
+        self.data = None
+        
+        self.fill()
     
-    def fill(self, data):
+    def fill(self):
+        data = set()
+        
         with open(self.filepath) as f_in:
             for l in f_in:
                 line = l.split()
@@ -14,6 +19,8 @@ class ChipSeq(object):
                     finish = int(line[2]) + 1
                     
                     for i in xrange(start, finish):
-                        data[i] += 1
+                        data.add(i)
                 except ValueError:
                     continue
+        
+        self.data = data
