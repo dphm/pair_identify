@@ -31,17 +31,18 @@ class ARGS(object):
 
 
 class MP(object):
-    def __init__(self, ps, maxtasks):
+    def __init__(self, ps):
         self.mgr = mp.Manager()
         self.q = self.mgr.Queue()
-        self.pool = mp.Pool(processes=ps, maxtasksperchild=maxtasks)
+        self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
     def activate(self, all_args):
         appender = self.pool.apply_async(file_append, (self.q,))
         jobs = []
         
         for args in all_args:
-            job = self.pool.apply_async(run, (self.q, args))
-            jobs.append(job)
+            print args
+            # job = self.pool.apply_async(run, (self.q, args))
+            # jobs.append(job)
         
         for job in jobs:
             job.get()
@@ -54,7 +55,7 @@ def all(argv):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
-    pool = MP(6, 1)
+    pool = MP(6)
     pool.activate(all_args)
 
 def get_args(argv):
@@ -98,8 +99,7 @@ def file_append(q):
         
         time.sleep(0.001)
 
-def run(q, argv):
-    args = ARGS(argv[0], argv[1], argv[2], argv[3])
+def run(q, args):
     log = "log"
     
     q.put((log, "Processing: %s\n" % args))
@@ -205,17 +205,10 @@ def main(argv=sys.argv[1:]):
     arg_len = len(argv)
     
     if arg_len == 4:
-        mgr = mp.Manager()
-        q = mgr.Queue()
-        pool = mp.Pool(processes=2, maxtasksperchild=1)
+        args = ARGS(argv[0], argv[1], argv[2], argv[3])
         
-        appender = pool.apply_async(file_append, (q,))
-        
-        job = pool.apply_async(run, (q, argv))
-        job.get()
-        
-        q.put(None)
-        pool.close()
+        pool = MP(2)
+        pool.activate(args)
         
         return 0
     elif arg_len == 2:
