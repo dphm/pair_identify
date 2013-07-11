@@ -30,27 +30,33 @@ class ARGS(object):
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 
+class MP(object):
+    def __init__(self, ps, maxtasks):
+        self.mgr = mp.Manager()
+        self.q = self.mgr.Queue()
+        self.pool = mp.Pool(processes=ps, maxtasksperchild=maxtasks)
+    def activate(self, all_args):
+        appender = pool.apply_async(file_append, (self.q,))
+        jobs = []
+        
+        for args in all_args:
+            print args
+            # job = pool.apply_async(run, (self.q, args))
+            # jobs.append(job)
+        
+        for job in jobs:
+            job.get()
+            
+        self.q.put(None)
+        self.pool.close()
+
+
 def all(argv):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
-    mgr = mp.Manager()
-    q = mgr.Queue()
-    pool = mp.Pool(processes=6, maxtasksperchild=1)
-    
-    appender = pool.apply_async(file_append, (q,))
-    jobs = []
-    
-    for args in all_args:
-        print args
-        # job = pool.apply_async(run, (q, args))
-        # jobs.append(job)
-    
-    for job in jobs:
-        job.get()
-    
-    q.put(None)
-    pool.close()
+    pool = MP(6, 1)
+    pool.activate(all_args)
 
 def get_args(argv):
     all_args = []
