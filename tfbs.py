@@ -5,7 +5,7 @@ class TFBS(object):
         self.code = code
         self.kind = kind
         self.filepath = "/scratch/dpham4/PI/data/%s/%s.txt" % (chromosome, code)
-        self.sites = []
+        self.sites = None
         self.num_sites = 0
     
     def fill(self):
@@ -21,10 +21,6 @@ class TFBS(object):
                         sites.append(i)
                 except ValueError:
                     continue
-        
-        if self.kind == 2:
-            # remove TFBS input file
-            call("rm -f %s" % self.filepath, shell=True)
         
         self.sites = sites
         self.num_sites = len(sites)
