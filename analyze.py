@@ -207,7 +207,7 @@ def main(argv=sys.argv[1:]):
         args = ARGS(argv[0], argv[1], argv[2], argv[3])
         
         pool = MP(2)
-        pool.activate([args])
+        pool.activate((args,))
         
         return 0
     elif arg_len == 2:
