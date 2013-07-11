@@ -190,7 +190,7 @@ def generate_data(q, args, chromosome, data, tf1, tf2):
             
             f_freq.write("%i,%i,%s\n" % (d, freq[d], score))
     
-    highscore = max(z)
+    highscore = max(z.values())
     
     if highscore >= Z_THRESHOLD:
         q.put((zpath, "%s, max Z-score: %s\n" % (args, highscore)))
