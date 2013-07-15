@@ -27,6 +27,7 @@ TF2_OUT="/scratch/dpham4/PI/data/$CHR/$TF2_CODE.txt"
 if [ ! -f $RMSK_OUT ]
 then
     zcat $RMSK_IN | grep -w $CHR > $RMSK_OUT
+    python min_rmsk.py $CHR
     if [ "$?" != "0" ]
     then
         rm -f $RMSK_OUT
