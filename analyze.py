@@ -63,8 +63,8 @@ def get_args(argv):
     all_args = []
     
     chromosome = argv[1]
-    chippath = "/scratch/dpham4/data/chip_seq_list.txt"
-    tfbspath = "/scratch/dpham4/data/%s/tfbs_list.txt" % chromosome
+    chippath = "/scratch/dpham4/PI/data/chip_seq_list.txt"
+    tfbspath = "/scratch/dpham4/PI/data/%s/tfbs_list.txt" % chromosome
     
     with open(chippath) as chip_list:
         # MXXXXX_NAME.bed
