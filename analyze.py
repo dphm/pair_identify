@@ -54,11 +54,8 @@ def all(argv):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
-    for args in all_args:
-        print all_args
-    
-    # pool = MP(6)
-    # pool.activate(all_args)
+    pool = MP(6)
+    pool.activate(all_args)
 
 def get_args(argv):
     all_args = []
