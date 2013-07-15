@@ -54,8 +54,10 @@ def all(argv):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
-    pool = MP(6)
-    pool.activate(all_args)
+    status = map(setup, all_args)
+    
+    # pool = MP(6)
+    # pool.activate(all_args)
 
 def get_args(argv):
     all_args = []
@@ -71,14 +73,14 @@ def get_args(argv):
             tf1_code = tf1[0]
             tf1_name = tf1[1].split(".")[0]
 
-        with open(tfbspath) as tfbs_list:
-            # sites.MXXXXX.gz
-            for tfbs in tfbs_list:
-                tf2_code = tfbs.split(".")[1]
+            with open(tfbspath) as tfbs_list:
+                # sites.MXXXXX.gz
+                for tfbs in tfbs_list:
+                    tf2_code = tfbs.split(".")[1]
         
-                if tf1_code != tf2_code:
-                    all_args.append(ARGS(chromosome, tf1_name,
-                                         tf1_code, tf2_code))
+                    if tf1_code != tf2_code:
+                        all_args.append(ARGS(chromosome, tf1_name,
+                                             tf1_code, tf2_code))
     
     return all_args
 
@@ -101,6 +103,14 @@ def run(q, args):
     
     q.put((log, "Processing: %s\n" % args))
     
+    # file preparation
+    status = setup(args)
+    
+    if status != "Success":
+        q.put((log, "%s\n" % status))
+        q.put((log, "Failed: %s\n" % args))
+        return
+    
     # create objects
     rmsk = RMSK(args.chr)
     chip = ChipSeq(args.chr, args.tf1_code)
@@ -110,6 +120,27 @@ def run(q, args):
     generate_data(q, args, args.chr, rmsk, chip, tf1, tf2)
     
     q.put((log, "Completed: %s\n" % args))
+
+def setup(args):
+    def success():
+        return "Success"
+    
+    def rmsk_err():
+        return "Error: unable to prepare rmsk file"
+    
+    def chip_err():
+        return "Error: unable to prepare chip file"
+    
+    def tf1_err():
+        return "Error: unable to prepare tf1 file"
+    
+    def tf2_err():
+        return "Error: unable to prepare tf2 file"
+        
+    exit_codes = {0: success, 1: rmsk_err, 2: chip_err, 3: tf1_err, 4: tf2_err}
+        
+    status = call("./setup.sh %s" % args, shell=True)
+    return exit_codes[status]()
 
 def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     # generated data
