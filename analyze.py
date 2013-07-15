@@ -69,9 +69,9 @@ def get_args(argv):
     with open(chippath) as chip_list:
         # MXXXXX_NAME.bed
         for chip in chip_list:
-            tf1 = chip.split("_")
-            tf1_code = tf1[0]
-            tf1_name = tf1[1].split(".")[0]
+            tf1 = chip.split(".")[0]
+            tf1_code = tf1[0:6]
+            tf1_name = tf1[7:]
 
             with open(tfbspath) as tfbs_list:
                 # sites.MXXXXX.gz
