@@ -54,33 +54,33 @@ def all(argv):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
-    pool = MP(6)
-    pool.activate(all_args)
+    status = map(status, all_args)
+    
+    # pool = MP(6)
+    # pool.activate(all_args)
 
 def get_args(argv):
     all_args = []
     
     chromosome = argv[1]
-    # chippath = "/scratch/dpham4/data/chip_seq_list.txt"
+    chippath = "/scratch/dpham4/data/chip_seq_list.txt"
     tfbspath = "/scratch/dpham4/data/%s/tfbs_list.txt" % chromosome
     
-    # with open(chippath) as chip_list:
-    #    # MXXXXX_NAME.bed
-    #    for chip in chip_list:
-    #        tf1 = chip.split("_")
-    #        tf1_code = tf1[0]
-    #        tf1_name = tf1[1].split(".")[0]
-    
-    tf1_code = "M00975"
-    tf1_name = "RFX5"
+    with open(chippath) as chip_list:
+        # MXXXXX_NAME.bed
+        for chip in chip_list:
+            tf1 = chip.split("_")
+            tf1_code = tf1[0]
+            tf1_name = tf1[1].split(".")[0]
 
-    with open(tfbspath) as tfbs_list:
-        # sites.MXXXXX.gz
-        for tfbs in tfbs_list:
-            tf2_code = tfbs.split(".")[1]
+        with open(tfbspath) as tfbs_list:
+            # sites.MXXXXX.gz
+            for tfbs in tfbs_list:
+                tf2_code = tfbs.split(".")[1]
         
-            if tf1_code != tf2_code:
-                all_args.append(ARGS(chromosome, tf1_name, tf1_code, tf2_code))
+                if tf1_code != tf2_code:
+                    all_args.append(ARGS(chromosome, tf1_name,
+                                         tf1_code, tf2_code))
     
     return all_args
 
