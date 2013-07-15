@@ -54,7 +54,7 @@ def all(argv):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
-    status = map(status, all_args)
+    status = map(setup, all_args)
     
     # pool = MP(6)
     # pool.activate(all_args)
