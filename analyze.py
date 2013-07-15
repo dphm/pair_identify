@@ -74,8 +74,8 @@ def get_args(argv):
             with open(tfbspath) as tfbs_list:
                 # sites.MXXXXX.gz
                 for tfbs in tfbs_list:
-                    tf2_code = tfbs.split(".")[1]
-        
+                    tf2_code = tfbs
+                    
                     if tf1_code != tf2_code:
                         all_args.append(ARGS(chromosome, tf1_name,
                                              tf1_code, tf2_code))
