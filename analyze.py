@@ -13,7 +13,6 @@ from subprocess import call
 
 path = "/scratch/dpham4/PI/data"
 
-MAX_ARRAY_SIZE = 250000000
 MAX_TFBS_DIST = 50
 MIN_MEAN_CUTOFF = 20
 Z_THRESHOLD = 5
