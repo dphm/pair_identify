@@ -119,7 +119,7 @@ def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2.code)
     dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2.code)
     freqpath = "%s/f_%s.csv" % (filepath, tf2.code)
-    zpath = "%s/data/z.txt" % path
+    zpath = "%s/z.txt" % path
     
     if not os.path.exists(filepath):
         os.mkdir(filepath)
