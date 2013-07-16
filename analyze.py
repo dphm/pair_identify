@@ -11,7 +11,7 @@ from casedata import study
 from stats import z_scores
 from subprocess import call
 
-path = "/scratch/dpham4/PI"
+path = "/scratch/dpham4/PI/data"
 
 MAX_ARRAY_SIZE = 250000000
 MAX_TFBS_DIST = 50
@@ -61,8 +61,8 @@ def get_args(argv):
     all_args = []
     
     chromosome = argv[1]
-    chippath = "/scratch/dpham4/PI/data/chip_seq_list.txt"
-    tfbspath = "/scratch/dpham4/PI/data/%s/tfbs_list.txt" % chromosome
+    chippath = "%s/chip_seq_list.txt" % path
+    tfbspath = "%s/%s/tfbs_list.txt" % (path, chromosome)
     
     with open(chippath) as chip_list:
         # MXXXXX_NAME.bed
@@ -115,7 +115,7 @@ def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     z = z_scores(freq, MIN_MEAN_CUTOFF)
     
     # output files
-    filepath = "%s/data/%s/%s" % (path, chromosome, tf1.code)
+    filepath = "%s/%s/%s" % (path, chromosome, tf1.code)
     sitepath = "%s/s_%s.txt" % (filepath, tf2.code)
     dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2.code)
     dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2.code)
