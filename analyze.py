@@ -36,8 +36,6 @@ class DATA(object):
         self.tf1 = None
         self.tf2 = None
         
-        self.tf1_code = None
-        
     def load_chip(self, chromosome, tf1_code):
         self.chip = ChipSeq(chromosome, tf1_code)
     
@@ -58,8 +56,7 @@ class MP(object):
         jobs = []
         
         for args in all_args:
-            if data.tf1_code == None or data.tf1_code != args.tf1_code:
-                data.tf1_code = args.tf1_code
+            if data.tf1 == None or data.tf1.code != args.tf1_code:
                 data.load_chip(args.chr, args.tf1_code)
                 data.load_tf1(args.chr, args.tf1_code)
             
