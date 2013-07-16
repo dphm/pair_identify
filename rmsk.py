@@ -1,12 +1,12 @@
 class RMSK(object):
     def __init__(self, chromosome):
         self.filepath = "/scratch/dpham4/PI/data/%s/rmsk.txt" % chromosome
-        self.data = None
+        self.sites = None
         
         self.fill()
     
     def fill(self):
-        data = set()
+        sites = set()
         
         with open(self.filepath) as f_in:
             for l in f_in:
@@ -16,6 +16,6 @@ class RMSK(object):
                 finish = int(line[1])
             
                 for i in xrange(start, finish):
-                    data.add(i)
+                    sites.add(i)
         
-        self.data = data
+        self.sites = sites

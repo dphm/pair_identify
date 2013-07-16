@@ -29,17 +29,40 @@ class ARGS(object):
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 
+class DATA(object):
+    def __init__(self, chromosome):
+        self.rmsk = RMSK(chromosome)
+        self.chip = None
+        self.tf1 = None
+        self.tf2 = None
+        
+        self.tf1_code = None
+        
+    def load_chip(self, chromosome, tf1_code):
+        self.chip = ChipSeq(chromosome, tf1_code)
+    
+    def load_tf1(self, chromosome, tf1_code):
+        self.tf1 = TFBS(chromosome, tf1_code, 1)
+    
+    def load_tf2(self, chromosome, tf2_code):
+        self.tf2 = TFBS(chromosome, tf2_code, 2)
+
+
 class MP(object):
     def __init__(self, ps):
         self.mgr = mp.Manager()
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
-    def activate(self, all_args):
+    def activate(self, all_args, data):
         appender = self.pool.apply_async(file_append, (self.q,))
         jobs = []
         
         for args in all_args:
-            job = self.pool.apply_async(run, (self.q, args))
+            if data.tf1_code == None or data.tf1_code != args.tf1_code:
+                data.load_chip(args.chr, args.tf1_code)
+                data.load_tf1(args.chr, args.tf1_code)
+            
+            job = self.pool.apply_async(run, (self.q, args, data))
             jobs.append(job)
         
         for job in jobs:
@@ -49,12 +72,12 @@ class MP(object):
         self.pool.close()
 
 
-def all(argv):
+def all(argv, data):
     call("echo -n > log", shell=True) # clear log
     all_args = get_args(argv)
     
     pool = MP(6)
-    pool.activate(all_args)
+    pool.activate(all_args, data)
 
 def get_args(argv):
     all_args = []
@@ -98,27 +121,28 @@ def run(q, args):
     
     q.put((log, "Processing: %s\n" % args))
     
-    # create objects
-    rmsk = RMSK(args.chr)
-    chip = ChipSeq(args.chr, args.tf1_code)
-    tf1  = TFBS(args.chr, args.tf1_code, 1)
-    tf2  = TFBS(args.chr, args.tf2_code, 2)
+    # create tf2 object
+    data.load_tf2(args.chr, args.tf2_code)
     
-    generate_data(q, args, args.chr, rmsk, chip, tf1, tf2)
+    generate_data(q, args, data)
     
     q.put((log, "Completed: %s\n" % args))
 
-def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
+def generate_data(q, args, data):
+    chromosome = args.chr
+    tf1_code = args.tf1_code
+    tf2_code = args.tf2_code
+    
     # generated data
-    d_TTT, d_FTT, freq = study(rmsk, chip, tf1, tf2, MAX_TFBS_DIST)
+    d_TTT, d_FTT, freq = study(data, MAX_TFBS_DIST)
     z = z_scores(freq, MIN_MEAN_CUTOFF)
     
     # output files
-    filepath = "%s/%s/%s" % (path, chromosome, tf1.code)
-    sitepath = "%s/s_%s.txt" % (filepath, tf2.code)
-    dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2.code)
-    dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2.code)
-    freqpath = "%s/f_%s.csv" % (filepath, tf2.code)
+    filepath = "%s/%s/%s" % (path, chromosome, tf1_code)
+    sitepath = "%s/s_%s.txt" % (filepath, tf2_code)
+    dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2_code)
+    dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2_code)
+    freqpath = "%s/f_%s.csv" % (filepath, tf2_code)
     zpath = "%s/z.txt" % path
     
     if not os.path.exists(filepath):
@@ -126,8 +150,8 @@ def generate_data(q, args, chromosome, rmsk, chip, tf1, tf2):
     
     # write number of sites and cases
     with open(sitepath, "w") as f_out:
-        f_out.write("%s %s\n" % (tf1.code, tf1.num_sites))
-        f_out.write("%s %s\n" % (tf2.code, tf2.num_sites))
+        f_out.write("%s %s\n" % (tf1_code, data.tf1.num_sites))
+        f_out.write("%s %s\n" % (tf2_code, data.tf2.num_sites))
         f_out.write("%s %i\n" % ("TTT", len(d_TTT)))
         f_out.write("%s %i\n" % ("FTT", len(d_FTT)))
     
@@ -160,14 +184,17 @@ def main(argv=sys.argv[1:]):
     
     if arg_len == 4:
         args = ARGS(argv[0], argv[1], argv[2], argv[3])
+        data = DATA(argv[0])
         
         pool = MP(2)
-        pool.activate((args,))
+        pool.activate((args,), data)
         
         return 0
     elif arg_len == 2:
         if argv[0] == "--all":
-            all(argv)
+            data = DATA(argv[1])
+            
+            all(argv, data)
             return 0
         else:
             print "usage:   python analyze.py --all CHR"
