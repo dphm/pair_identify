@@ -132,8 +132,8 @@ def tf_lists(chromosome):
     with open(tf1path) as list_1:
         # MXXXXX NAME\n
         for entry in list_1:
-            code, name = entry.split().strip()
-            tf1_list[code] = name
+            code, name = entry.split()
+            tf1_list[code] = name.strip()
     
     with open(tf2path) as list_2:
         # MXXXXX\n
