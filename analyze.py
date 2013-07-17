@@ -129,15 +129,15 @@ def tf_lists(chromosome):
     tf1_list = {}
     tf2_list = []
     
-    with open(tf1path) as tf1_list:
+    with open(tf1path) as list_1:
         # MXXXXX NAME
-        for entry in tf1_list:
+        for entry in list_1:
             code, name = entry.split()
             tf1_list[code] = name
     
-    with open(tf2path) as tf2_list:
+    with open(tf2path) as list_2:
         # MXXXXX
-        for entry in tf2_list:
+        for entry in list_2:
             tf2_list.append(entry)
     
     return tf1_list, tf2_list
