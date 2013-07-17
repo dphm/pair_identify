@@ -1,9 +1,8 @@
 from subprocess import call
 
 class TFBS(object):
-    def __init__(self, chromosome, code, kind):
+    def __init__(self, chromosome, code):
         self.code = code
-        self.kind = kind
         self.filepath = "/scratch/dpham4/PI/data/%s/%s.txt" % (chromosome, code)
         self.sites = None
         self.num_sites = 0
