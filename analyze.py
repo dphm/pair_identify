@@ -55,7 +55,7 @@ class MP(object):
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
     def activate(self, argv):
-        appender = self.pool.apply_async(self.file_append, (self.q,))
+        appender = self.pool.apply_async(file_append, (self.q,))
         jobs = []
         
         if argv[0] == "--all":
@@ -105,21 +105,21 @@ class MP(object):
             
         self.q.put(None)
         self.pool.close()
-    
-    def file_append(q):
-        while 1:
-            data = q.get()
-        
-            if data == None:
-                break
-        
-            file, message = data
-        
-            with open(file, "a") as f_out:
-                f_out.write(message)
-        
-            time.sleep(0.001)
 
+
+def file_append(q):
+    while 1:
+        data = q.get()
+    
+        if data == None:
+            break
+    
+        file, message = data
+    
+        with open(file, "a") as f_out:
+            f_out.write(message)
+    
+        time.sleep(0.001)
 
 def tf_lists(chromosome):
     tf1path = "%s/tf1_list.txt" % path
