@@ -30,8 +30,9 @@ class ARGS(object):
 
 
 class DATA(object):
+    rmsk = RMSK(chromosome)
+    
     def __init__(self, chromosome):
-        self.rmsk = RMSK(chromosome)
         self.chip = None
         self.tf1 = None
         self.tf2 = None
