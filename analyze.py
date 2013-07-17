@@ -145,11 +145,14 @@ def tf_lists(chromosome):
 
 def run(q, args, data):
     log = "log"
-    q.put((log, "Processing: %s\n" % args))
+    
+    start = time.strftime("%H:%M:%S", time.localtime())
+    q.put((log, "Processing (%s): %s\n" % (start, args)))
     
     generate_data(q, args, data)
     
-    q.put((log, "Completed: %s\n" % args))
+    finish = time.strftime("%H:%M:%S", time.localtime())
+    q.put((log, "Completed (%s): %s\n" % (finish, args)))
 
 def generate_data(q, args, data):
     chromosome = args.chr
