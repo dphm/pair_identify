@@ -76,12 +76,13 @@ class MP(object):
                     if tf1_code != tf2_code:
                         args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
                         data.load_tf2(chromosome, tf2_code)
-                    
-                        job = self.pool.apply_async(run, (self.q, args, data))
-                        jobs.append(job)
+                        
+                        print args
+                        # job = self.pool.apply_async(run, (self.q, args, data))
+                        # jobs.append(job)
                 
-                for job in jobs:
-                    job.get()
+                # for job in jobs:
+                    # job.get()
         
         else:
             chromosome = argv[0]
