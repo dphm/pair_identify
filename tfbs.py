@@ -20,7 +20,7 @@ class TFBS(object):
                     i = int(line[1])
                     if i >= 0:
                         sites.append(i)
-                except ValueError, IndexError:
+                except (ValueError, IndexError) as e:
                     continue
         
         self.sites = sites
