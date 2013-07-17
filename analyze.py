@@ -30,13 +30,15 @@ class ARGS(object):
 
 
 class DATA(object):
-    rmsk = RMSK(chromosome)
-    
-    def __init__(self, chromosome):
+    def __init__(self):
+        self.rmsk = None
         self.chip = None
         self.tf1 = None
         self.tf2 = None
-        
+    
+    def load_rmsk(self, rmsk):
+        self.rmsk = rmsk
+    
     def load_chip(self, chromosome, tf1_code):
         self.chip = ChipSeq(chromosome, tf1_code)
     
@@ -52,76 +54,96 @@ class MP(object):
         self.mgr = mp.Manager()
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
-    def activate(self, all_args, data):
-        appender = self.pool.apply_async(file_append, (self.q,))
+    def activate(self, argv):
+        appender = self.pool.apply_async(self.file_append, (self.q,))
         jobs = []
         
-        for args in all_args:
-            if data.tf1 == None or data.tf1.code != args.tf1_code:
-                data.load_chip(args.chr, args.tf1_code)
-                data.load_tf1(args.chr, args.tf1_code)
+        if argv[0] == "--all":
+            chromosome = argv[1]
+            
+            rmsk = RMSK(chromosome)
+            tf1_list, tf2_list = tf_lists(chromosome)
+            
+            for tf1_code in tf1_list:
+                tf1_name = tf1_list[tf1_code]
+                
+                data = DATA()
+                data.load_rmsk(rmsk)
+                data.load_chip(chromosome, tf1_code)
+                data.load_tf1(chromosome, tf1_code)
+                
+                for tf2_code in tf2_list:
+                    if tf1_code != tf2_code:
+                        args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+                        data.load_tf2(chromosome, tf2_code)
+                    
+                        job = self.pool.apply_async(run, (self.q, args, data))
+                        jobs.append(job)
+                
+                for job in jobs:
+                    job.get()
+        
+        else:
+            chromosome = argv[0]
+            tf1_name = argv[1]
+            tf1_code = argv[2]
+            tf2_code = argv[3]
+            
+            args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+            
+            data = DATA()
+            data.load_rmsk(RMSK(chromosome))
+            data.load_chip(chromosome, tf1_code)
+            data.load_tf1(chromosome, tf1_code)
+            data.load_tf2(chromosome, tf2_code)
             
             job = self.pool.apply_async(run, (self.q, args, data))
             jobs.append(job)
         
-        for job in jobs:
-            job.get()
+            for job in jobs:
+                job.get()
             
         self.q.put(None)
         self.pool.close()
-
-
-def all(argv, data):
-    call("echo -n > log", shell=True) # clear log
-    all_args = get_args(argv)
     
-    pool = MP(6)
-    pool.activate(all_args, data)
+    def file_append(q):
+        while 1:
+            data = q.get()
+        
+            if data == None:
+                break
+        
+            file, message = data
+        
+            with open(file, "a") as f_out:
+                f_out.write(message)
+        
+            time.sleep(0.001)
 
-def get_args(argv):
-    all_args = []
-    
-    chromosome = argv[1]
-    chippath = "%s/chip_seq_list.txt" % path
-    tfbspath = "%s/%s/tfbs_list.txt" % (path, chromosome)
-    
-    with open(chippath) as chip_list:
-        # MXXXXX_NAME.bed
-        for chip in chip_list:
-            tf1_code, tf1_name = chip.split()
 
-            with open(tfbspath) as tfbs_list:
-                # sites.MXXXXX.gz
-                for tfbs in tfbs_list:
-                    tf2_code = tfbs
-                    
-                    if tf1_code != tf2_code:
-                        all_args.append(ARGS(chromosome, tf1_name,
-                                             tf1_code, tf2_code))
+def tf_lists(chromosome):
+    tf1path = "%s/tf1_list.txt" % path
+    tf2path = "%s/%s/tf2_list.txt" % (path, chromosome)
     
-    return all_args
-
-def file_append(q):
-    while 1:
-        data = q.get()
-        
-        if data == None:
-            break
-        
-        file, message = data
-        
-        with open(file, "a") as f_out:
-            f_out.write(message)
-        
-        time.sleep(0.001)
+    tf1_list = {}
+    tf2_list = []
+    
+    with open(tf1path) as tf1_list:
+        # MXXXXX NAME
+        for entry in tf1_list:
+            code, name = entry.split()
+            tf1_list[code] = name
+    
+    with open(tf2path) as tf2_list:
+        # MXXXXX
+        for entry in tf2_list:
+            tf2_list.append(entry)
+    
+    return tf1_list, tf2_list
 
 def run(q, args, data):
     log = "log"
-    
     q.put((log, "Processing: %s\n" % args))
-    
-    # create tf2 object
-    data.load_tf2(args.chr, args.tf2_code)
     
     generate_data(q, args, data)
     
@@ -181,24 +203,23 @@ def main(argv=sys.argv[1:]):
     # command line processing
     arg_len = len(argv)
     
-    if arg_len == 4:
-        args = ARGS(argv[0], argv[1], argv[2], argv[3])
-        data = DATA(argv[0])
-        
-        pool = MP(2)
-        pool.activate((args,), data)
-        
-        return 0
-    elif arg_len == 2:
+    if arg_len == 2:
         if argv[0] == "--all":
-            data = DATA(argv[1])
+            call("echo -n > log", shell=True) # clear log
             
-            all(argv, data)
+            pool = MP(6)
+            pool.activate(argv)
+            
             return 0
         else:
             print "usage:   python analyze.py --all CHR"
             print "example: python analyze.py --all chr1"
             return 1
+    elif arg_len == 4:
+        pool = MP(2)
+        pool.activate(argv)
+        
+        return 0
     else:
         print "usage:   python analyze.py CHR TF1_NAME TF1_CODE TF2_CODE"
         print "example: python analyze.py chr1 NFKB M00774 M00497"
