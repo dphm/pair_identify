@@ -211,7 +211,7 @@ def main(argv=sys.argv[1:]):
         if argv[0] == "--all":
             call("echo -n > log", shell=True) # clear log
             
-            pool = MP(6)
+            pool = MP(9)
             pool.activate(argv)
             
             return 0
