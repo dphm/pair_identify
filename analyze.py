@@ -36,15 +36,6 @@ class DATA(object):
         self.chip = None
         self.tf1 = None
         self.tf2 = None
-    
-    def load_chip(self, chromosome, tf1_code):
-        self.chip = ChipSeq(chromosome, tf1_code)
-    
-    def load_tf1(self, chromosome, tf1_code):
-        self.tf1 = TFBS(chromosome, tf1_code)
-    
-    def load_tf2(self, chromosome, tf2_code):
-        self.tf2 = TFBS(chromosome, tf2_code)
 
 
 class MP(object):
