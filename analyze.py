@@ -12,6 +12,7 @@ from stats import z_scores
 from subprocess import call
 
 path = "/scratch/dpham4/PI/data"
+log = "log"
 
 MAX_TFBS_DIST = 50
 MIN_MEAN_CUTOFF = 20
@@ -35,8 +36,6 @@ class MP(object):
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
     def activate(self, argv):
-        log = "log"
-        
         appender = self.pool.apply_async(file_append, (self.q,))
         
         if argv[0] == "--all":
@@ -121,8 +120,6 @@ def tf_lists(chromosome):
     return tf1_list, tf2_list
 
 def run(q, args, rmsk, chip, tf1):
-    log = "log"
-    
     msg = "Processing (%s): %s\n" % (get_time(), args)
     q.put((log, msg))
     
