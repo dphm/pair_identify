@@ -146,7 +146,7 @@ def run(q, args, data):
     msg = "Processing (%s): %s\n" % (get_time(), args)
     q.put((log, msg))
     
-    data.tf2 = TFBS(args.chr, tf2_code)
+    data.tf2 = TFBS(args.chr, args.tf2_code)
     generate_data(q, args, data)
     
     msg = "Completed (%s): %s\n" % (get_time(), args)
