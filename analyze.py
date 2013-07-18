@@ -75,7 +75,6 @@ class MP(object):
                         data = DATA()
                         data.chip = chip
                         data.tf1 = tf1
-                        data.tf2 = TFBS(chromosome, tf2_code)
                         
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
@@ -95,7 +94,6 @@ class MP(object):
             data = DATA()
             data.chip = ChipSeq(chromosome, tf1_code)
             data.tf1 = TFBS(chromosome, tf1_code)
-            data.tf2 = TFBS(chromosome, tf2_code)
             
             job = self.pool.apply_async(run, (self.q, args, data))
             job.get()
@@ -148,6 +146,7 @@ def run(q, args, data):
     msg = "Processing (%s): %s\n" % (get_time(), args)
     q.put((log, msg))
     
+    data.tf2 = TFBS(chromosome, tf2_code)
     generate_data(q, args, data)
     
     msg = "Completed (%s): %s\n" % (get_time(), args)
