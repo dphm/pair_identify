@@ -58,7 +58,6 @@ class MP(object):
         log = "log"
         
         appender = self.pool.apply_async(file_append, (self.q,))
-        jobs = []
         
         if argv[0] == "--all":
             chromosome = argv[1]
@@ -77,6 +76,7 @@ class MP(object):
             self.q.put((log, msg))
             
             for tf1_code in tf1_list:
+                jobs = []
                 tf1_name = tf1_list[tf1_code]
                 
                 data = DATA()
@@ -91,6 +91,9 @@ class MP(object):
                         
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
+                
+                for job in jobs:
+                    job.get()
             
             msg = "Initial setup complete (%s)\n" % get_time()
             self.q.put((log, msg))
@@ -109,9 +112,6 @@ class MP(object):
             data.load_tf2(chromosome, tf2_code)
             
             job = self.pool.apply_async(run, (self.q, args, data))
-            jobs.append(job)
-        
-        for job in jobs:
             job.get()
             
         self.q.put(None)
