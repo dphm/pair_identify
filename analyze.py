@@ -30,14 +30,12 @@ class ARGS(object):
 
 
 class DATA(object):
+    rmsk = None
+    
     def __init__(self):
-        self.rmsk = None
         self.chip = None
         self.tf1 = None
         self.tf2 = None
-    
-    def load_rmsk(self, rmsk):
-        self.rmsk = rmsk
     
     def load_chip(self, chromosome, tf1_code):
         self.chip = ChipSeq(chromosome, tf1_code)
@@ -65,7 +63,7 @@ class MP(object):
             msg = "Loading RepeatMasker data (%s)\n" % get_time()
             self.q.put((log, msg))
             
-            rmsk = RMSK(chromosome)
+            DATA.rmsk = RMSK(chromosome)
             
             tf1_list, tf2_list = tf_lists(chromosome)
             
@@ -77,7 +75,6 @@ class MP(object):
                 self.q.put((log, msg))
                 
                 data = DATA()
-                data.load_rmsk(rmsk)
                 data.load_chip(chromosome, tf1_code)
                 data.load_tf1(chromosome, tf1_code)
                 
@@ -99,8 +96,9 @@ class MP(object):
             
             args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
             
+            DATA.rmsk = RMSK(chromosome)
+            
             data = DATA()
-            data.load_rmsk(RMSK(chromosome))
             data.load_chip(chromosome, tf1_code)
             data.load_tf1(chromosome, tf1_code)
             data.load_tf2(chromosome, tf2_code)
