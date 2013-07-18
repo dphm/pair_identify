@@ -84,6 +84,10 @@ class MP(object):
                 data.load_chip(chromosome, tf1_code)
                 data.load_tf1(chromosome, tf1_code)
                 
+                msg = ("Appending jobs for all TFs against %s (%s)\n" %
+                      (tf1_name, get_time()))
+                self.q.put((log, msg))
+                
                 for tf2_code in tf2_list:
                     if tf1_code != tf2_code:
                         args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
@@ -91,6 +95,10 @@ class MP(object):
                         
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
+                
+                msg = ("Running jobs for all TFs against %s (%s)\n" %
+                      (tf1_name, get_time()))
+                self.q.put((log, msg))
                 
                 for job in jobs:
                     job.get()
