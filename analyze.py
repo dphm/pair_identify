@@ -102,9 +102,6 @@ class MP(object):
                 
                 for job in jobs:
                     job.get()
-            
-            msg = "Initial setup complete (%s)\n" % get_time()
-            self.q.put((log, msg))
         else:
             chromosome = argv[0]
             tf1_name = argv[1]
@@ -220,7 +217,10 @@ def generate_data(q, args, data):
             
             f_freq.write("%i,%i,%s\n" % (d, freq[d], score))
     
-    highscore = max(z.values())
+    highscore = 0
+    
+    if z:
+        highscore = max(z.values())
     
     if highscore >= Z_THRESHOLD:
         msg = "%s, max Z-score: %s\n" % (args, highscore)
