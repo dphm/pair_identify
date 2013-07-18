@@ -50,7 +50,6 @@ class MP(object):
             tf1_list, tf2_list = tf_lists(chromosome)
             
             for tf1_code in tf1_list:
-                jobs = []
                 tf1_name = tf1_list[tf1_code]
                 
                 msg = "Loading %s data (%s)\n" % (tf1_name, get_time())
@@ -63,12 +62,8 @@ class MP(object):
                     if tf1_code != tf2_code:
                         args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
                         
-                        job = self.pool.apply_async(run,
-                              (self.q, args, rmsk, chip, tf1))
-                        jobs.append(job)
-                
-                for job in jobs:
-                    job.get()
+                        self.pool.apply_async(run,
+                        (self.q, args, rmsk, chip, tf1))
         else:
             chromosome = argv[0]
             tf1_name = argv[1]
@@ -80,11 +75,11 @@ class MP(object):
             chip = ChipSeq(chromosome, tf1_code)
             tf1 = TFBS(chromosome, tf1_code)
             
-            job = self.pool.apply_async(run, (self.q, args, rmsk, chip, tf1))
-            job.get()
+            self.pool.apply_async(run, (self.q, args, rmsk, chip, tf1))
             
-        self.q.put(None)
         self.pool.close()
+        self.pool.join()
+        self.q.put(None)
 
 
 def get_time():
