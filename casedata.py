@@ -1,17 +1,17 @@
 from collections import defaultdict
 
-def study(data, max_dist):
+def study(rmsk, chip, tf1, tf2, max_dist):
     d_TTT = []
     d_FTT = []
     freq = defaultdict(int)
     
-    rmsk_sites = data.rmsk.sites
-    chip_sites = data.chip.sites
-    tf1_sites = data.tf1.sites
-    tf2_sites = data.tf2.sites
+    rmsk_sites = rmsk.sites
+    chip_sites = chip.sites
+    tf1_sites = tf1.sites
+    tf2_sites = tf2.sites
     
-    tf1_len = data.tf1.num_sites
-    tf2_len = data.tf2.num_sites
+    tf1_len = tf1.num_sites
+    tf2_len = tf2.num_sites
     
     l = 0
     r = 0
