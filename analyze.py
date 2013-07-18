@@ -55,14 +55,26 @@ class MP(object):
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
     def activate(self, argv):
+        log = "log"
+        
         appender = self.pool.apply_async(file_append, (self.q,))
         jobs = []
         
         if argv[0] == "--all":
             chromosome = argv[1]
             
+            msg = "Loading RepeatMasker data (%s)" % get_time()
+            self.q.put((log, msg))
+            
             rmsk = RMSK(chromosome)
+            
+            msg = "Reading TF lists (%s)" % get_time()
+            self.q.put((log, msg))
+            
             tf1_list, tf2_list = tf_lists(chromosome)
+            
+            msg = "Loading ChIP-Seq and TFBS data (%s)" % get_time()
+            self.q.put((log, msg))
             
             for tf1_code in tf1_list:
                 tf1_name = tf1_list[tf1_code]
@@ -79,6 +91,9 @@ class MP(object):
                         
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
+            
+            msg = "Initial setup complete (%s)" % get_time()
+            self.q.put((log, msg))
         else:
             chromosome = argv[0]
             tf1_name = argv[1]
@@ -102,6 +117,9 @@ class MP(object):
         self.q.put(None)
         self.pool.close()
 
+
+def get_time():
+    return time.strftime("%H:%M:%S", time.localtime())
 
 def file_append(q):
     while 1:
@@ -141,13 +159,13 @@ def tf_lists(chromosome):
 def run(q, args, data):
     log = "log"
     
-    start = time.strftime("%H:%M:%S", time.localtime())
-    q.put((log, "Processing (%s): %s\n" % (start, args)))
+    msg = "Processing (%s): %s\n" % (get_time(), args)
+    q.put((log, msg))
     
     generate_data(q, args, data)
     
-    finish = time.strftime("%H:%M:%S", time.localtime())
-    q.put((log, "Completed (%s): %s\n" % (finish, args)))
+    msg = "Completed (%s): %s\n" % (get_time(), args)
+    q.put((log, msg))
 
 def generate_data(q, args, data):
     chromosome = args.chr
@@ -197,7 +215,8 @@ def generate_data(q, args, data):
     highscore = max(z.values())
     
     if highscore >= Z_THRESHOLD:
-        q.put((zpath, "%s, max Z-score: %s\n" % (args, highscore)))
+        msg = "%s, max Z-score: %s\n" % (args, highscore)
+        q.put((zpath, msg))
     
 def main(argv=sys.argv[1:]):
     # command line processing
