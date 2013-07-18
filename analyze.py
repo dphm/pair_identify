@@ -63,17 +63,17 @@ class MP(object):
         if argv[0] == "--all":
             chromosome = argv[1]
             
-            msg = "Loading RepeatMasker data (%s)" % get_time()
+            msg = "Loading RepeatMasker data (%s)\n" % get_time()
             self.q.put((log, msg))
             
             rmsk = RMSK(chromosome)
             
-            msg = "Reading TF lists (%s)" % get_time()
+            msg = "Reading TF lists (%s)\n" % get_time()
             self.q.put((log, msg))
             
             tf1_list, tf2_list = tf_lists(chromosome)
             
-            msg = "Loading ChIP-Seq and TFBS data (%s)" % get_time()
+            msg = "Loading ChIP-Seq and TFBS data (%s)\n" % get_time()
             self.q.put((log, msg))
             
             for tf1_code in tf1_list:
@@ -92,7 +92,7 @@ class MP(object):
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
             
-            msg = "Initial setup complete (%s)" % get_time()
+            msg = "Initial setup complete (%s)\n" % get_time()
             self.q.put((log, msg))
         else:
             chromosome = argv[0]
