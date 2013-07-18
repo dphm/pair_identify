@@ -29,15 +29,6 @@ class ARGS(object):
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 
-class DATA(object):
-    rmsk = None
-    
-    def __init__(self):
-        self.chip = None
-        self.tf1 = None
-        self.tf2 = None
-
-
 class MP(object):
     def __init__(self, ps):
         self.mgr = mp.Manager()
@@ -54,7 +45,7 @@ class MP(object):
             msg = "Loading RepeatMasker data (%s)\n" % get_time()
             self.q.put((log, msg))
             
-            DATA.rmsk = RMSK(chromosome)
+            rmsk = RMSK(chromosome)
             
             tf1_list, tf2_list = tf_lists(chromosome)
             
@@ -72,11 +63,8 @@ class MP(object):
                     if tf1_code != tf2_code:
                         args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
                         
-                        data = DATA()
-                        data.chip = chip
-                        data.tf1 = tf1
-                        
-                        job = self.pool.apply_async(run, (self.q, args, data))
+                        job = self.pool.apply_async(run,
+                              (self.q, args, rmsk, chip, tf1))
                         jobs.append(job)
                 
                 for job in jobs:
@@ -88,14 +76,11 @@ class MP(object):
             tf2_code = argv[3]
             
             args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+            rmsk = RMSK(chromosome)
+            chip = ChipSeq(chromosome, tf1_code)
+            tf1 = TFBS(chromosome, tf1_code)
             
-            DATA.rmsk = RMSK(chromosome)
-            
-            data = DATA()
-            data.chip = ChipSeq(chromosome, tf1_code)
-            data.tf1 = TFBS(chromosome, tf1_code)
-            
-            job = self.pool.apply_async(run, (self.q, args, data))
+            job = self.pool.apply_async(run, (self.q, args, rmsk, chip, tf1))
             job.get()
             
         self.q.put(None)
@@ -140,25 +125,25 @@ def tf_lists(chromosome):
     
     return tf1_list, tf2_list
 
-def run(q, args, data):
+def run(q, args, rmsk, chip, tf1):
     log = "log"
     
     msg = "Processing (%s): %s\n" % (get_time(), args)
     q.put((log, msg))
     
-    data.tf2 = TFBS(args.chr, args.tf2_code)
-    generate_data(q, args, data)
+    tf2 = TFBS(args.chr, args.tf2_code)
+    generate_data(q, args, rmsk, chip, tf1, tf2)
     
     msg = "Completed (%s): %s\n" % (get_time(), args)
     q.put((log, msg))
 
-def generate_data(q, args, data):
+def generate_data(q, args, rmsk, chip, tf1, tf2):
     chromosome = args.chr
-    tf1_code = args.tf1_code
-    tf2_code = args.tf2_code
+    tf1_code = tf1.code
+    tf2_code = tf2.code
     
     # generated data
-    d_TTT, d_FTT, freq = study(data, MAX_TFBS_DIST)
+    d_TTT, d_FTT, freq = study(rmsk, chip, tf1, tf2, MAX_TFBS_DIST)
     z = z_scores(freq, MIN_MEAN_CUTOFF)
     
     # output files
@@ -174,8 +159,8 @@ def generate_data(q, args, data):
     
     # write number of sites and cases
     with open(sitepath, "w") as f_out:
-        f_out.write("%s %s\n" % (tf1_code, data.tf1.num_sites))
-        f_out.write("%s %s\n" % (tf2_code, data.tf2.num_sites))
+        f_out.write("%s %s\n" % (tf1_code, tf1.num_sites))
+        f_out.write("%s %s\n" % (tf2_code, tf2.num_sites))
         f_out.write("%s %i\n" % ("TTT", len(d_TTT)))
         f_out.write("%s %i\n" % ("FTT", len(d_FTT)))
     
