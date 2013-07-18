@@ -67,26 +67,19 @@ class MP(object):
             
             rmsk = RMSK(chromosome)
             
-            msg = "Reading TF lists (%s)\n" % get_time()
-            self.q.put((log, msg))
-            
             tf1_list, tf2_list = tf_lists(chromosome)
-            
-            msg = "Loading ChIP-Seq and TFBS data (%s)\n" % get_time()
-            self.q.put((log, msg))
             
             for tf1_code in tf1_list:
                 jobs = []
                 tf1_name = tf1_list[tf1_code]
                 
+                msg = "Loading %s data (%s)\n" % (tf1_name, get_time())
+                self.q.put((log, msg))
+                
                 data = DATA()
                 data.load_rmsk(rmsk)
                 data.load_chip(chromosome, tf1_code)
                 data.load_tf1(chromosome, tf1_code)
-                
-                msg = ("Appending jobs for all TFs against %s (%s)\n" %
-                      (tf1_name, get_time()))
-                self.q.put((log, msg))
                 
                 for tf2_code in tf2_list:
                     if tf1_code != tf2_code:
@@ -95,10 +88,6 @@ class MP(object):
                         
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
-                
-                msg = ("Running jobs for all TFs against %s (%s)\n" %
-                      (tf1_name, get_time()))
-                self.q.put((log, msg))
                 
                 for job in jobs:
                     job.get()
