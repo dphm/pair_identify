@@ -79,10 +79,6 @@ class MP(object):
                         
                         job = self.pool.apply_async(run, (self.q, args, data))
                         jobs.append(job)
-                
-                for job in jobs:
-                    job.get()
-        
         else:
             chromosome = argv[0]
             tf1_name = argv[1]
@@ -100,8 +96,8 @@ class MP(object):
             job = self.pool.apply_async(run, (self.q, args, data))
             jobs.append(job)
         
-            for job in jobs:
-                job.get()
+        for job in jobs:
+            job.get()
             
         self.q.put(None)
         self.pool.close()
