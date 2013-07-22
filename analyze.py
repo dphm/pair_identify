@@ -121,6 +121,9 @@ def tf_lists(chromosome):
     with open(tf1path) as list_1:
         # MXXXXX NAME\n
         for entry in list_1:
+            if entry[0] == "#":
+                continue
+            
             code, name = entry.split()
             tf1_list[code] = name.rstrip()
     
