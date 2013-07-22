@@ -1,9 +1,11 @@
 from collections import defaultdict
 
 def study(rmsk, chip, tf1, tf2, max_dist):
+    """Return lists of positions and distances for TTT and FTT cases,
+       and dictionary of distance frequencies"""
     d_TTT = []
     d_FTT = []
-    freq = defaultdict(int)
+    freq = defaultdict(int) # key: distance, value: count
     
     rmsk_sites = rmsk.sites
     chip_sites = chip.sites
@@ -13,13 +15,14 @@ def study(rmsk, chip, tf1, tf2, max_dist):
     tf1_len = tf1.num_sites
     tf2_len = tf2.num_sites
     
-    l = 0
-    r = 0
+    l = 0 # bookmark index for tf1_sites
+    r = 0 # bookmark index for tf2_sites
     
-    l_seek = 0
-    r_seek = 0
+    l_seek = 0 # comparison index for tf1_sites
+    r_seek = 0 # comparison index for tf2_sites
     
     while l < tf1_len and r < tf2_len:
+        # no more entries to advance seek index in tf1_sites or tf2_sites
         finished = l_seek >= tf1_len or r_seek >= tf2_len
         
         if not finished:

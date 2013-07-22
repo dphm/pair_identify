@@ -19,6 +19,7 @@ MIN_MEAN_CUTOFF = 20
 Z_THRESHOLD = 5
 
 class ARGS(object):
+    """Store information about chromosome and pair of tfs being compared"""
     def __init__(self, chromosome, tf1_name, tf1_code, tf2_code):
         self.chr = chromosome
         self.tf1_name = tf1_name
@@ -26,18 +27,26 @@ class ARGS(object):
         self.tf2_code = tf2_code
     
     def __repr__(self):
+        """Return string representation of args"""
         return ("%s %s %s %s" % 
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 
 class MP(object):
+    """Manage multiprocessing pool"""
     def __init__(self, ps):
         self.mgr = mp.Manager()
         self.q = self.mgr.Queue()
         self.pool = mp.Pool(processes=ps, maxtasksperchild=1)
+    
     def activate(self, argv):
+        """Prepare input data and run using multiprocessing pool
+           apply_async() does not wait for task to be completed
+           close() prevents more tasks from being submitted to pool
+           join() waits for worker processes to exit"""
         appender = self.pool.apply_async(file_append, (self.q,))
         
+        # all pairs of tfs
         if argv[0] == "--all":
             chromosome = argv[1]
             
@@ -63,6 +72,7 @@ class MP(object):
                         
                         self.pool.apply_async(run,
                         (self.q, args, rmsk, chip, tf1))
+        # one pair of tfs
         else:
             chromosome = argv[0]
             tf1_name = argv[1]
@@ -82,9 +92,11 @@ class MP(object):
 
 
 def get_time():
+    """Return 24h string representation of local time (HH:MM:SS)"""
     return time.strftime("%H:%M:%S", time.localtime())
 
 def file_append(q):
+    """Append message in q to file"""
     while 1:
         data = q.get()
     
@@ -99,10 +111,11 @@ def file_append(q):
         time.sleep(0.001)
 
 def tf_lists(chromosome):
+    """Return tf lists after reading from files"""
     tf1path = "%s/tf1_list.txt" % path
     tf2path = "%s/%s/tf2_list.txt" % (path, chromosome)
     
-    tf1_list = {}
+    tf1_list = {} # key: code, value: name
     tf2_list = []
     
     with open(tf1path) as list_1:
@@ -120,6 +133,7 @@ def tf_lists(chromosome):
     return tf1_list, tf2_list
 
 def run(q, args, rmsk, chip, tf1):
+    """Complete data loading and begin data generation"""
     msg = "Processing (%s): %s\n" % (get_time(), args)
     q.put((log, msg))
     
@@ -130,6 +144,7 @@ def run(q, args, rmsk, chip, tf1):
     q.put((log, msg))
 
 def generate_data(q, args, rmsk, chip, tf1, tf2):
+    """Generate distance, frequency, Z-score data and write to files"""
     chromosome = args.chr
     tf1_code = tf1.code
     tf2_code = tf2.code
@@ -146,6 +161,7 @@ def generate_data(q, args, rmsk, chip, tf1, tf2):
     freqpath = "%s/f_%s.csv" % (filepath, tf2_code)
     zpath = "%s/z.txt" % path
     
+    # create directory for tf1 output files
     if not os.path.exists(filepath):
         os.mkdir(filepath)
     
@@ -187,6 +203,7 @@ def main(argv=sys.argv[1:]):
     # command line processing
     arg_len = len(argv)
     
+    # all pairs of tfs
     if arg_len == 2:
         if argv[0] == "--all":
             call("echo -n > log", shell=True) # clear log
@@ -199,6 +216,7 @@ def main(argv=sys.argv[1:]):
             print "usage:   python analyze.py --all CHR"
             print "example: python analyze.py --all chr1"
             return 1
+    # one pair of tfs
     elif arg_len == 4:
         pool = MP(2)
         pool.activate(argv)
