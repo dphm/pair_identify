@@ -162,7 +162,7 @@ def generate_data(q, args, rmsk, chip, tf1, tf2):
     dTTTpath = "%s/d_TTT_%s.csv" % (filepath, tf2_code)
     dFTTpath = "%s/d_FTT_%s.csv" % (filepath, tf2_code)
     freqpath = "%s/f_%s.csv" % (filepath, tf2_code)
-    zpath = "%s/z.txt" % path
+    zpath = "%s/z.csv" % path
     
     # create directory for tf1 output files
     if not os.path.exists(filepath):
@@ -199,7 +199,7 @@ def generate_data(q, args, rmsk, chip, tf1, tf2):
         highscore = max(z.values())
     
     if highscore >= Z_THRESHOLD:
-        msg = "%s, max Z-score: %s\n" % (args, highscore)
+        msg = "%s,%s\n" % (args, highscore)
         q.put((zpath, msg))
     
 def main(argv=sys.argv[1:]):
