@@ -37,7 +37,7 @@ class MP(object):
     def __init__(self, ps):
         self.mgr = mp.Manager()
         self.q = self.mgr.Queue()
-        self.pool = mp.Pool(processes=ps)
+        self.pool = mp.Pool(processes=ps, maxtasksperchild=100)
     
     def activate(self, argv):
         """Prepare input data and run using multiprocessing pool
