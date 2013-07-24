@@ -3,7 +3,6 @@
 import os
 import sys
 import time
-import multiprocessing as mp
 from rmsk import RMSK
 from chipseq import ChipSeq
 from tfbs import TFBS
