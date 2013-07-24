@@ -32,56 +32,39 @@ class ARGS(object):
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
 
 
-class MP(object):
-    """Manage multiprocessing pool"""
-    def __init__(self, ps):
-        self.mgr = mp.Manager()
-        self.q = self.mgr.Queue()
-        self.pool = mp.Pool(processes=ps, maxtasksperchild=100)
+def activate(self, argv):
+    """Prepare input data and run"""
     
-    def activate(self, argv):
-        """Prepare input data and run using multiprocessing pool
-           apply_async() does not wait for task to be completed
-           close() prevents more tasks from being submitted to pool
-           join() waits for worker processes to exit"""
+    # all pairs of tfs
+    if argv[0] == "--all":
+        chromosome = argv[1]
         
-        # all pairs of tfs
-        if argv[0] == "--all":
-            chromosome = argv[1]
+        rmsk = RMSK(chromosome)
+        tf1_list, tf2_list = tf_lists(chromosome)
+    
+        for tf1_code in tf1_list:
+            tf1_name = tf1_list[tf1_code]
             
-            rmsk = RMSK(chromosome)
-            tf1_list, tf2_list = tf_lists(chromosome)
-        
-            for tf1_code in tf1_list:
-                tf1_name = tf1_list[tf1_code]
-                
-                chip = ChipSeq(chromosome, tf1_code)
-                tf1 = TFBS(chromosome, tf1_code)
-            
-                for tf2_code in tf2_list:
-                    if tf1_code != tf2_code:
-                        args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
-                    
-                        self.pool.apply_async(run,
-                        (self.q, args, rmsk, chip, tf1))
-        # one pair of tfs
-        else:
-            chromosome = argv[0]
-            tf1_name = argv[1]
-            tf1_code = argv[2]
-            tf2_code = argv[3]
-            
-            args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
-            rmsk = RMSK(chromosome)
             chip = ChipSeq(chromosome, tf1_code)
             tf1 = TFBS(chromosome, tf1_code)
-            
-            self.pool.apply_async(run, (self.q, args, rmsk, chip, tf1))
-            
-        self.pool.close()
-        self.pool.join()
-        self.q.put(None)
-
+        
+            for tf2_code in tf2_list:
+                if tf1_code != tf2_code:
+                    args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+                    run(args, rmsk, chip, tf1)
+    # one pair of tfs
+    else:
+        chromosome = argv[0]
+        tf1_name = argv[1]
+        tf1_code = argv[2]
+        tf2_code = argv[3]
+        
+        args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+        rmsk = RMSK(chromosome)
+        chip = ChipSeq(chromosome, tf1_code)
+        tf1 = TFBS(chromosome, tf1_code)
+        
+        run(args, rmsk, chip, tf1)
 
 def get_time():
     """Return 24h string representation of local time (HH:MM:SS)"""
@@ -112,19 +95,19 @@ def tf_lists(chromosome):
     
     return tf1_list, tf2_list
 
-def run(q, args, rmsk, chip, tf1):
+def run(args, rmsk, chip, tf1):
     """Complete data loading and begin data generation"""
     with open(log, "a") as f_log:
         msg = "Processing (%s): %s\n" % (get_time(), args)
         f_log.write(msg)
     
         tf2 = TFBS(args.chr, args.tf2_code)
-        generate_data(q, args, rmsk, chip, tf1, tf2)
+        generate_data(args, rmsk, chip, tf1, tf2)
     
         msg = "Completed (%s): %s\n" % (get_time(), args)
         f_log.write(msg)
 
-def generate_data(q, args, rmsk, chip, tf1, tf2):
+def generate_data(args, rmsk, chip, tf1, tf2):
     """Generate distance, frequency, Z-score data and write to files"""
     chromosome = args.chr
     tf1_code = tf1.code
@@ -189,10 +172,7 @@ def main(argv=sys.argv[1:]):
     if arg_len == 2:
         if argv[0] == "--all":
             call("echo -n > log", shell=True) # clear log
-            
-            pool = MP(9)
-            pool.activate(argv)
-            
+            activate(argv)
             return 0
         else:
             print "usage:   python analyze.py --all CHR"
@@ -200,9 +180,7 @@ def main(argv=sys.argv[1:]):
             return 1
     # one pair of tfs
     elif arg_len == 4:
-        pool = MP(2)
-        pool.activate(argv)
-        
+        activate(argv)
         return 0
     else:
         print "usage:   python analyze.py CHR TF1_NAME TF1_CODE TF2_CODE"
