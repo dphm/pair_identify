@@ -44,32 +44,24 @@ class MP(object):
            apply_async() does not wait for task to be completed
            close() prevents more tasks from being submitted to pool
            join() waits for worker processes to exit"""
-        appender = self.pool.apply_async(file_append, (self.q,))
         
         # all pairs of tfs
         if argv[0] == "--all":
             chromosome = argv[1]
             
-            msg = "Loading RepeatMasker data (%s)\n" % get_time()
-            self.q.put((log, msg))
-            
             rmsk = RMSK(chromosome)
-            
             tf1_list, tf2_list = tf_lists(chromosome)
-            
+        
             for tf1_code in tf1_list:
                 tf1_name = tf1_list[tf1_code]
                 
-                msg = "Loading %s data (%s)\n" % (tf1_name, get_time())
-                self.q.put((log, msg))
-                
                 chip = ChipSeq(chromosome, tf1_code)
                 tf1 = TFBS(chromosome, tf1_code)
-                
+            
                 for tf2_code in tf2_list:
                     if tf1_code != tf2_code:
                         args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
-                        
+                    
                         self.pool.apply_async(run,
                         (self.q, args, rmsk, chip, tf1))
         # one pair of tfs
@@ -94,21 +86,6 @@ class MP(object):
 def get_time():
     """Return 24h string representation of local time (HH:MM:SS)"""
     return time.strftime("%H:%M:%S", time.localtime())
-
-def file_append(q):
-    """Append message in q to file"""
-    while 1:
-        data = q.get()
-    
-        if data == None:
-            break
-    
-        file, message = data
-    
-        with open(file, "a") as f_out:
-            f_out.write(message)
-    
-        time.sleep(0.001)
 
 def tf_lists(chromosome):
     """Return tf lists after reading from files"""
@@ -137,14 +114,15 @@ def tf_lists(chromosome):
 
 def run(q, args, rmsk, chip, tf1):
     """Complete data loading and begin data generation"""
-    msg = "Processing (%s): %s\n" % (get_time(), args)
-    q.put((log, msg))
+    with open(log, "a") as f_log:
+        msg = "Processing (%s): %s\n" % (get_time(), args)
+        f_log.write(msg)
     
-    tf2 = TFBS(args.chr, args.tf2_code)
-    generate_data(q, args, rmsk, chip, tf1, tf2)
+        tf2 = TFBS(args.chr, args.tf2_code)
+        generate_data(q, args, rmsk, chip, tf1, tf2)
     
-    msg = "Completed (%s): %s\n" % (get_time(), args)
-    q.put((log, msg))
+        msg = "Completed (%s): %s\n" % (get_time(), args)
+        f_log.write(msg)
 
 def generate_data(q, args, rmsk, chip, tf1, tf2):
     """Generate distance, frequency, Z-score data and write to files"""
@@ -199,8 +177,9 @@ def generate_data(q, args, rmsk, chip, tf1, tf2):
         highscore = max(z.values())
     
     if highscore >= Z_THRESHOLD:
-        msg = "%s,%s\n" % (args, highscore)
-        q.put((zpath, msg))
+        with open(log, "a") as f_log:
+            msg = "%s,%s\n" % (args, highscore)
+            f_log.write(msg)
     
 def main(argv=sys.argv[1:]):
     # command line processing
