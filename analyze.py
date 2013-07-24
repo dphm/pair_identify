@@ -125,9 +125,9 @@ def generate_data(args, rmsk, chip, tf1, tf2):
         highscore = max(z.values())
     
     if highscore >= Z_THRESHOLD:
-        with open(log, "a") as f_log:
+        with open(zpath, "a") as f_z:
             msg = "%s,%s\n" % (args, highscore)
-            f_log.write(msg)
+            f_z.write(msg)
     
 def main(argv=sys.argv[1:]):
     # command line processing
