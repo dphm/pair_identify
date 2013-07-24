@@ -30,41 +30,7 @@ class ARGS(object):
         """Return string representation of args"""
         return ("%s %s %s %s" % 
                (self.chr, self.tf1_name, self.tf1_code, self.tf2_code))
-
-
-def activate(self, argv):
-    """Prepare input data and run"""
-    
-    # all pairs of tfs
-    if argv[0] == "--all":
-        chromosome = argv[1]
         
-        rmsk = RMSK(chromosome)
-        tf1_list, tf2_list = tf_lists(chromosome)
-    
-        for tf1_code in tf1_list:
-            tf1_name = tf1_list[tf1_code]
-            
-            chip = ChipSeq(chromosome, tf1_code)
-            tf1 = TFBS(chromosome, tf1_code)
-        
-            for tf2_code in tf2_list:
-                if tf1_code != tf2_code:
-                    args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
-                    run(args, rmsk, chip, tf1)
-    # one pair of tfs
-    else:
-        chromosome = argv[0]
-        tf1_name = argv[1]
-        tf1_code = argv[2]
-        tf2_code = argv[3]
-        
-        args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
-        rmsk = RMSK(chromosome)
-        chip = ChipSeq(chromosome, tf1_code)
-        tf1 = TFBS(chromosome, tf1_code)
-        
-        run(args, rmsk, chip, tf1)
 
 def get_time():
     """Return 24h string representation of local time (HH:MM:SS)"""
@@ -172,7 +138,23 @@ def main(argv=sys.argv[1:]):
     if arg_len == 2:
         if argv[0] == "--all":
             call("echo -n > log", shell=True) # clear log
-            activate(argv)
+            
+            chromosome = argv[1]
+            
+            rmsk = RMSK(chromosome)
+            tf1_list, tf2_list = tf_lists(chromosome)
+    
+            for tf1_code in tf1_list:
+                tf1_name = tf1_list[tf1_code]
+            
+                chip = ChipSeq(chromosome, tf1_code)
+                tf1 = TFBS(chromosome, tf1_code)
+        
+                for tf2_code in tf2_list:
+                    if tf1_code != tf2_code:
+                        args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+                        run(args, rmsk, chip, tf1)
+            
             return 0
         else:
             print "usage:   python analyze.py --all CHR"
@@ -180,7 +162,18 @@ def main(argv=sys.argv[1:]):
             return 1
     # one pair of tfs
     elif arg_len == 4:
-        activate(argv)
+        chromosome = argv[0]
+        tf1_name = argv[1]
+        tf1_code = argv[2]
+        tf2_code = argv[3]
+        
+        args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
+        rmsk = RMSK(chromosome)
+        chip = ChipSeq(chromosome, tf1_code)
+        tf1 = TFBS(chromosome, tf1_code)
+        
+        run(args, rmsk, chip, tf1)
+        
         return 0
     else:
         print "usage:   python analyze.py CHR TF1_NAME TF1_CODE TF2_CODE"
