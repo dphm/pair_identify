@@ -13,7 +13,7 @@ from subprocess import call
 path = "/scratch/dpham4/PI/data"
 log = "log"
 
-MAX_TFBS_DIST = 50
+MAX_TFBS_DIST = 100
 MIN_MEAN_CUTOFF = 20
 Z_THRESHOLD = 5
 
