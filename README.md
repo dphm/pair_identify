@@ -45,7 +45,7 @@ This file contains the positions of RepeatMasker regions in a particular chromos
 **Description:**  
 This file contains the positions of ChIP-seq regions for a particular tf1 in a particular chromosome. These are experimentally verified regions that have been sequenced after being 'fished out' using the given tf1. The tf1 may not be directly bound to the region. Extracted from **/home/mcb/blanchem/wgEncodeRegTfbsClustered/[tf1 code]_[tf1 name].bed**.
 
-### M\*.txt
+### M\*.txt : TFBS data
 
 **Path:** /scratch/dpham4/PI/data/[chromosome]/[tf1 or tf2 code].txt  
 **Format:** [genome] [site position] [score] [sequence]\\n  
