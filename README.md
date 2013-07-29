@@ -34,7 +34,7 @@ This file is a list of tf2s (all transcription factors being tested as candidate
 **Example:** 10000 10469  
 
 **Description:**  
-This file contains the positions of RepeatMasker regions in a particular chromosome. RepeatMasker data provides regions of known transposable elements in the genome. The RepeatMasker data for all chromosomes can be found at **/scratch/dpham4/PI/data/rmsk.txt.gz**.  
+This file contains the positions of RepeatMasker regions in a particular chromosome. RepeatMasker data provides regions of known transposable elements in the genome. Extracted from the RepeatMasker data for all chromosomes at **/scratch/dpham4/PI/data/rmsk.txt.gz**.  
 
 ### chip_seq_[tf1 code].txt : ChIP-seq data
 
