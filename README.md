@@ -95,7 +95,6 @@ The purpose of MIN_MEAN_CUTOFF is to determine a 'background level' frequency. T
 \<tf2 code\> \<number of tf2 sites\>\\n  
 TTT \<number of TTT cases\>\\n  
 FTT \<number of FTT cases\>\\n  
-
 **Example:**  
 M00795_r 36683  
 M00059_r 84099  
