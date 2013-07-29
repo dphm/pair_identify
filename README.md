@@ -56,7 +56,8 @@ This file contains TFBS positions for either a tf1 or tf2. The 0 in the first co
 
 ## Output files  
 
-### d_TTT_[tf2 code].csv : TFBS pairs and distances in tf1 ChIP-seq regions
+### d_TTT_[tf2 code].csv : TFBS pairs and distances
+#### Inside tf1 ChIP-seq regions
 
 **Path:** /scratch/dpham4/PI/data/[chromosome]/[tf1 code]/d_TTT_[tf2 code].csv  
 **Format:** [tf1 site position],[tf2 site position],[distance]\\n  
@@ -65,7 +66,8 @@ This file contains TFBS positions for either a tf1 or tf2. The 0 in the first co
 **Description:**  
 This file reports the positions of pairs with predicted sites that are found in tf1 ChIP-seq regions, and the absolute value between them, if the distance between pairs is less than MAX_TFBS_DIST. The positions may be useful for searching the [UCSC Genome Browser](http://genome.ucsc.edu/cgi-bin/hgGateway) or the [Bejerano GREAT tool](http://bejerano.stanford.edu/great/public/html/).
 
-### d_FTT_[tf2 code].csv : TFBS pairs and distances outside tf1 ChIP-seq regions
+### d_FTT_[tf2 code].csv : TFBS pairs and distances
+#### Outside tf1 ChIP-seq regions
 
 **Path:** /scratch/dpham4/PI/data/[chromosome]/[tf1 code]/d_FTT_[tf2 code].csv  
 **Format:** [tf1 site position],[tf2 site position],[distance]\\n  
