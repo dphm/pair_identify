@@ -227,7 +227,7 @@ It is very useful to run `python analyze.py --all chr1` using a detached screen 
 
 * **RepeatMasker:** /scratch/dpham4/PI/data/rmsk.txt.gz
 * **ChIP-seq:** /home/mcb/blanchem/wgEncodeRegTfbsClustered/[tf1 code (0:6)]\_[tf1 name].bed  
-*Note: Same ChIP-seq file used for forward and reverse strands, so tf1 code without _r is used*
+*Note: same ChIP-seq file used for forward and reverse strands, so tf1 code without _r is used*
 * **TFBS (tf1):** /scratch/blanchem/[chromosome]/sites/sites.[tf1 code].gz
 * **TFBS (tf2):** /scratch/blanchem/[chromosome]/sites/sites.[tf2 code].gz
 
