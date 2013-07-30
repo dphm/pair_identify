@@ -215,7 +215,7 @@ where args has the format [chromosome] [tf1 name] [tf1 code] [tf2 code]
 To include the new tf1 or tf2 when running all args in *analyze.py*:  
 
 * Manually add them to *tf1_list.txt* or *tf2_list.txt* using the format described in  
-**Understanding the data > Input files > tf1_list.txt / tf2_list.txt**
+[Understanding the data > Input files > tf1_list.txt or tf2_list.txt](https://github.com/quelledanielle/pair_identify#input-files)
 
 ---
 
