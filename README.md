@@ -217,7 +217,7 @@ It is very useful to run `python analyze.py --all chr1` using a detached screen 
 *e.g. screen -d -r 11189.pts-5.koksoak*
 * For a list of invoked screens, run `screen -ls`
 * To kill a screen, run `screen -X -S [identifier] kill`
-* To exit a screen, reattach to it and run `exit`
+* To exit a screen, reattach it and run `exit`
 
 ## Setting up additional input files
 
