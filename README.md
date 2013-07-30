@@ -150,6 +150,11 @@ Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py
 **chipseq.py:** Module containing ChipSeq class, which loads and stores ChIP-seq data  
 **tfbs.py:** Module containing TFBS class, which loads and stores TFBS data for tf1 or tf2
 
+#### Log
+
+**log:** Processing and Completed args with the local time, appended to *log* while *analyze.py* is running  
+*Note:* log *is cleared at the beginning of running all args in* analyze.py
+
 ---
 
 Feel free to use or modify any part of the existing code to suit the needs of your project.
