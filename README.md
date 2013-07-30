@@ -257,6 +257,7 @@ To include the new tf1 or tf2 when running all args in *analyze.py*:
 
 * Further filtering of the args in *z.csv*
 * Check positions of interesting distances for proximity to genes ([GREAT](http://bejerano.stanford.edu/great/public/html/))
+* Data analysis to find supporting evidence of transcription factor cooperation
 * Apply approach to extant mammalian genomes and inferred ancestral mammalian genomes  
 *Note: current TFBS data provides positions relative to the human genome, but the TFBS positions required are from the original genomes*
 
