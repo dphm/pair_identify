@@ -236,7 +236,7 @@ If the original input files are all present, run *setup.sh*:
 **Usage:** `./setup.sh [chromosome] [tf1 name] [tf1 code] [tf2 code]`  
 **Example:** `./setup.sh chr1 POU2F2 M00795_r M00059_r`
 
-If `grep` fails, or does not find any matches, it will return 0. In turn, *setup.sh* will return an exit code corresponding to which file it was unable to prepare: {1: RepeatMasker, 2: ChIP-seq, 3: tf1 TFBS, 4: tf2 TFBS}.
+If `grep` fails, or does not find any matches, it will return 0. In turn, *setup.sh* will return an exit code corresponding to the file it was unable to prepare: {1: RepeatMasker, 2: ChIP-seq, 3: tf1 TFBS, 4: tf2 TFBS}.
 
 ### All pairs
 
@@ -246,7 +246,7 @@ To call *setup.sh* in a Python script:
 
 * `from subprocess import call`
 * `call('./setup.sh %s' % args, shell=True)`  
-where args has the format [chromosome] [tf1 name] [tf1 code] [tf2 code]
+where args has the format '[chromosome] [tf1 name] [tf1 code] [tf2 code]'
 
 To include the new tf1 or tf2 when running all args in *analyze.py*:  
 
