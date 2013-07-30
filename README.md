@@ -115,7 +115,36 @@ A line is appended to this file if the pair's frequency data contains a z-score 
 
 # Usage
 
-*Instructions coming soon!*
+On **koksoak.cs.mcgill.ca**, the files required to run *analyze.py* are located in the **/scratch/dpham4/PI/pair_identify** directory. They have the same contents as the files in this github repository.
+
+## Overview
+
+**Python:** 2.7.3 on **koksoak** server
+
+### File descriptions
+
+#### Logistics
+
+**.gitignore:** Files listed in the .gitignore will not be tracked by git  
+**README.md:** This documentation  
+**__init__.py:** Enables Python to treat pair_identify as a package  
+
+#### Setup
+
+**setup.sh:** Sets up rmsk, chip_seq_M\*, M\* files required for one set of args if they don't exist  
+**min_rmsk.py:** Removes unnecessary information from *rmsk.txt* after its preparation in *setup.sh*  
+
+#### Analysis
+
+**analyze.py:** Main program, uses previously setup input files and generates output files  
+**casedata.py:** Module containing **study()**, which generates data for TTT/FTT cases and frequencies  
+**stats.py:** Module containing **z_scores()**, **mean()**, **std()** for calculating z-scores
+
+#### Data classes
+
+**rmsk.py:** Module containing RMSK class, which loads and stores RepeatMasker data  
+**chipseq.py:** Module containing ChipSeq class, which loads and stores ChIP-seq data  
+**tfbs.py:** Module containing TFBS class, which loads and stores TFBS data for tf1 or tf2
 
 ---
 
