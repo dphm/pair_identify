@@ -153,7 +153,78 @@ Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py
 #### Log
 
 **log:** Processing and Completed args with the local time, appended to *log* while *analyze.py* is running  
-*Note:* log *is cleared at the beginning of running all args in* analyze.py
+*Note:* log *is cleared at the beginning of running all args in* analyze.py 
+
+## Running analyze.py
+
+Either one pair of TFs or all pairs of TFs can be run by *analyze.py*. Any input files for this pair must be setup before before running *analyze.py*.
+
+### One pair
+
+**Usage:** `python analyze.py [chromosome] [tf1 name] [tf1 code] [tf2 code]`  
+**Example:** `python analyze.py chr1 POU2F2 M00795_r M00059_r`
+
+### All pairs
+
+**Usage:** `python analyze.py --all [chromosome]`  
+**Example:** `python analyze.py --all chr1`
+
+#### Using screen
+
+It is very useful to run `python analyze.py --all chr1` using a detached screen so the program continues running even after logging out of the server. You may find a [screen user manual](http://www.delorie.com/gnu/docs/screen/screen_toc.html) useful, but here are some basic commands:  
+
+* To invoke a new screen, run the `screen` command
+* Run the desired commands within the new screen
+* To detach from the screen, press `ctrl + a`, then `d`
+* To reattach the screen, run `screen -d -r`
+* If several screens are running, reattach to one via `screen -d -r [identifier]`  
+*e.g. screen -d -r 11189.pts-5.koksoak*
+* For a list of invoked screens, run `screen -ls`
+* To kill a screen, run `screen -X -S [identifier] kill`
+* To exit a screen, reattach to it and run `exit`
+
+## Setting up additional input files
+
+### One pair
+
+*setup.sh* requires the following original input files:  
+
+* **RepeatMasker:** /scratch/dpham4/PI/data/rmsk.txt.gz
+* **ChIP-seq:** /home/mcb/blanchem/wgEncodeRegTfbsClustered/[tf1 code (0:6)]\_[tf1 name].bed  
+*Note: Same ChIP-seq file used for forward and reverse strands, so tf1 code without _r is used*
+* **TFBS (tf1):** /scratch/blanchem/$CHR/sites/sites.[tf1 code].gz
+* **TFBS (tf2):** /scratch/blanchem/$CHR/sites/sites.[tf2 code].gz
+
+If the original input files are all present, run *setup.sh*:  
+
+**Usage:** `./setup.sh [chromosome] [tf1 name] [tf1 code] [tf2 code]`  
+**Example:** `./setup.sh chr1 POU2F2 M00795_r M00059_r`
+
+If `grep` fails, or does not find any matches, it will return 0. In turn, *setup.sh* will return an exit code corresponding to which file it was unable to prepare: {1: RepeatMasker, 2: ChIP-seq, 3: tf1 TFBS, 4: tf2 TFBS}.
+
+### All pairs
+
+There is no script for setting up files for all pairs, since *analyze.py* was modified to do the task only once. It is straightforward to run *setup.sh* using your own list of args.  
+
+To call *setup.sh* in a Python script:
+
+* `from subprocess import call`
+* `call('./setup.sh %s' % args, shell=True)`  
+where args has the format [chromosome] [tf1 name] [tf1 code] [tf2 code]
+
+To include the new tf1 or tf2 when running all args in *analyze.py*:  
+
+* Manually add them to *tf1_list.txt* or *tf2_list.txt* using the format described in  
+**Understanding the data > Input files > tf1_list.txt / tf2_list.txt**
+
+---
+
+## TODO
+
+* Further filtering of the args in *z.csv*
+* Check positions of interesting distances for proximity to genes ([GREAT](http://bejerano.stanford.edu/great/public/html/))
+* Apply approach to extant mammalian genomes and inferred ancestral mammalian genomes  
+*Note: current TFBS data provides positions relative to the human genome, but the TFBS positions required are from the original genomes*
 
 ---
 
