@@ -191,7 +191,9 @@ Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py
 
 ## Running analyze.py
 
-Either one pair of TFs or all pairs of TFs can be run by *analyze.py*. Any input files for this pair must be setup before before running *analyze.py*.
+Either one pair of TFs or all pairs of TFs can be run by *analyze.py*. Any input files for this pair must be setup before before running *analyze.py*.  
+
+For chr1: RepeatMasker, 45 ChIP-seq, 1243 TFBS files have already been prepared.
 
 ### One pair
 
