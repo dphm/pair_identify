@@ -119,7 +119,7 @@ This file reports the positions of pairs predicted sites that are not found in t
 **Example:** 7,929,155.999906228  
 
 **Description:**  
-This file reports (regardless of TTT or FTT categorization) the distance between all pairs, the number of times that distance was found, and a z-score. The z-score is calculated as (frequency - mean) / (standard deviation), where the mean and standard deviation have been calculated for distances greater than or equal to MIN_MEAN_CUTOFF.  
+This file reports (regardless of TTT or FTT categorization) the distance between pairs of binding sites, the number of times that distance was found, and a z-score. The z-score is calculated as (frequency - mean) / (standard deviation), where the mean and standard deviation have been calculated for distances greater than or equal to MIN_MEAN_CUTOFF.  
 
 The purpose of MIN_MEAN_CUTOFF is to determine a 'background level' frequency. The first few distances are ignored as they may have large frequencies from similar PWMs (Position Weight Matrices). See Professor Blanchette for an explanation of the similar PWMs issue.
 
