@@ -170,7 +170,7 @@ Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py
 #### Setup
 
 **setup.sh:** Sets up rmsk, chip_seq_M\*, M\* files required for one set of args if they don't exist  
-**min_rmsk.py:** Removes unnecessary information from *rmsk.txt* after its preparation in *setup.sh*  
+**min_rmsk.py:** Removes unnecessary columns from *rmsk.txt*, automatically run in *setup.sh*  
 
 #### Analysis
 
