@@ -213,7 +213,7 @@ It is very useful to run `python analyze.py --all chr1` using a detached screen 
 * Run the desired commands within the new screen
 * To detach from the screen, press `ctrl + a`, then `d`
 * To reattach the screen, run `screen -d -r`
-* If several screens are running, reattach to one via `screen -d -r [identifier]`  
+* If several screens are running, reattach one via `screen -d -r [identifier]`  
 *e.g. screen -d -r 11189.pts-5.koksoak*
 * For a list of invoked screens, run `screen -ls`
 * To kill a screen, run `screen -X -S [identifier] kill`
