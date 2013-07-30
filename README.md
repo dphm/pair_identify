@@ -153,7 +153,7 @@ A line is appended to this file if the pair's frequency data contains a z-score 
 
 # Usage
 
-Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py* are located in the **/scratch/dpham4/PI/pair_identify** directory. They have the same contents as the files in this github repository.
+Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py* are located in the **/scratch/dpham4/PI/pair_identify** directory. They have the same contents as the files in this GitHub repository.
 
 ## Overview
 
