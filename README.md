@@ -171,6 +171,7 @@ Accessed through **koksoak.cs.mcgill.ca**, the files required to run *analyze.py
 
 **setup.sh:** Sets up rmsk, chip_seq_M\*, M\* files required for one set of args if they don't exist  
 **min_rmsk.py:** Removes unnecessary columns from *rmsk.txt*, automatically run in *setup.sh*  
+**tf2_list.py:** Sets up *tf2_list.txt* if it doesn't exist, automatically run with *analyze.py* --all  
 
 #### Analysis
 
@@ -252,6 +253,8 @@ To include the new tf1 or tf2 when running all pairs in *analyze.py*:
 
 * Manually add them to *tf1_list.txt* or *tf2_list.txt* using the format described in  
 [Understanding the data > Input files > tf1_list.txt or tf2_list.txt](https://github.com/quelledanielle/pair_identify#input-files)
+
+*Note: for any chromosome other than chr1, you may need to remove TFs from tf2_list if the original TFBS files are empty (the tf2_list for chr1 has already been cleaned up manually)*
 
 ---
 
