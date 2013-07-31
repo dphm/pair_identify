@@ -24,7 +24,7 @@ TF2_OUT="/scratch/dpham4/PI/data/$CHR/$TF2_CODE.txt"
 #--------#
 #  main  #
 #--------#
-if [ ! -f "/scratch/dpham4/PI/data/$CHR" ]
+if [ ! -d "/scratch/dpham4/PI/data/$CHR" ]
 then
     mkdir "/scratch/dpham4/PI/data/$CHR"
 fi
