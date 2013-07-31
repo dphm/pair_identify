@@ -140,12 +140,20 @@ def main(argv=sys.argv[1:]):
             
             chromosome = argv[1]
             
+            with open(log, "a") as f_log:
+                msg = "Loading (%s): RepeatMasker data\n" % get_time()
+                f_log.write(msg)
+            
             rmsk = RMSK(chromosome)
             tf1_list, tf2_list = tf_lists(chromosome)
     
             for tf1_code in tf1_list:
                 tf1_name = tf1_list[tf1_code]
-            
+                
+                with open(log, "a") as f_log:
+                    msg = "Loading (%s): %s data\n" % (get_time(), tf1_code)
+                    f_log.write(msg)
+                
                 chip = ChipSeq(chromosome, tf1_code)
                 tf1 = TFBS(chromosome, tf1_code)
         
@@ -165,6 +173,10 @@ def main(argv=sys.argv[1:]):
         tf1_name = argv[1]
         tf1_code = argv[2]
         tf2_code = argv[3]
+        
+        with open(log, "a") as f_log:
+            msg = "Loading (%s): required input data\n" % get_time()
+            f_log.write(msg)
         
         args = ARGS(chromosome, tf1_name, tf1_code, tf2_code)
         rmsk = RMSK(chromosome)
