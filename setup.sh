@@ -69,3 +69,5 @@ then
         exit 4
     fi
 fi
+
+exit 0
