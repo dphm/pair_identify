@@ -24,6 +24,11 @@ TF2_OUT="/scratch/dpham4/PI/data/$CHR/$TF2_CODE.txt"
 #--------#
 #  main  #
 #--------#
+if [ ! -f "/scratch/dpham4/PI/data/$CHR" ]
+then
+    mkdir "/scratch/dpham4/PI/data/$CHR"
+fi
+
 if [ ! -f $RMSK_OUT ]
 then
     zcat $RMSK_IN | grep -w $CHR > $RMSK_OUT
