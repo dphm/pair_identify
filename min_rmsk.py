@@ -1,3 +1,5 @@
+import sys
+
 def read(filepath):
     data = []
     
