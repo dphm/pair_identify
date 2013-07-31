@@ -8,6 +8,7 @@ from chipseq import ChipSeq
 from tfbs import TFBS
 from casedata import study
 from stats import z_scores
+from tf2_list import create_tf2_list
 from subprocess import call
 
 path = "/scratch/dpham4/PI/data"
@@ -51,6 +52,9 @@ def tf_lists(chromosome):
             
             code, name = entry.split()
             tf1_list[code] = name.rstrip()
+    
+    if not os.path.exists(tf2path):
+        create_tf2_list(chromosome)
     
     with open(tf2path) as list_2:
         # MXXXXX\n
